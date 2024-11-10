@@ -1,7 +1,7 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useMemo } from "react";
-import { AdminRoutesPath, PrivateRoutesPath, RoutesPath } from "./RoutesPath";
-import { PrivateRoute } from "./PrivateRoutes";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useMemo } from 'react';
+import { AdminRoutesPath, PrivateRoutesPath, RoutesPath } from './RoutesPath';
+import { PrivateRoute } from './PrivateRoutes';
 
 export const RouterManager = () => {
   const adminRoutes = useMemo(
@@ -9,12 +9,17 @@ export const RouterManager = () => {
       Object.keys(AdminRoutesPath).map((path) => {
         const RouteComponent = AdminRoutesPath[path];
         return (
-          <Route key={path} element={<PrivateRoute requiredRole={["ADMIN"]} />}>
-            <Route path={path} element={<RouteComponent />} />
+          <Route
+            key={path}
+            element={<PrivateRoute requiredRole={['ADMIN']} />}>
+            <Route
+              path={path}
+              element={<RouteComponent />}
+            />
           </Route>
         );
       }),
-    [],
+    []
   );
 
   const privateRoutes = useMemo(
@@ -24,25 +29,37 @@ export const RouterManager = () => {
         return (
           <Route
             key={path}
-            element={<PrivateRoute requiredRole={["USER", "ADMIN"]} />}
-          >
-            <Route path={path} element={<RouteComponent />} />
+            element={<PrivateRoute requiredRole={['USER', 'ADMIN']} />}>
+            <Route
+              path={path}
+              element={<RouteComponent />}
+            />
           </Route>
         );
       }),
-    [],
+    []
   );
   const publicRoutes = useMemo(
     () =>
       Object.keys(RoutesPath).map((path) => {
         const RouteComponent = RoutesPath[path];
-        return <Route key={path} path={path} element={<RouteComponent />} />;
+        return (
+          <Route
+            key={path}
+            path={path}
+            element={<RouteComponent />}
+          />
+        );
       }),
-    [],
+    []
   );
 
   return (
-    <BrowserRouter>
+    <BrowserRouter
+      future={{
+        v7_relativeSplatPath: true,
+        v7_startTransition: true,
+      }}>
       <Routes>
         {adminRoutes}
         {privateRoutes}
