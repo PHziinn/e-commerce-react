@@ -1,8 +1,8 @@
 import { Box, Container, useMediaQuery, useTheme } from '@mui/material';
-import { CardProducts } from '../../components/cardProducts';
-import { CarouselList } from '../../components/carousel';
-import { Footer } from '../../components/footer';
-import { PrimarySearchBar } from '../../components/navBarHeader';
+import { CardProducts } from '../../../components/cardProducts';
+import { CarouselList } from '../../../components/carousel';
+import { Footer } from '../../../components/footer';
+import { PrimarySearchBar } from '../../../components/navBarHeader';
 import { styled } from '@mui/material/styles';
 
 const StyledContainer = styled('div')({

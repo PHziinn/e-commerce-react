@@ -1,6 +1,6 @@
-import { Home } from '../page/home';
 import { SignUp } from '../page/public/cadastrar';
 import { DetailsProducts } from '../page/public/detailsProduct';
+import { Home } from '../page/public/home';
 import { Login } from '../page/public/login';
 import { Unauthorized } from '../page/public/unauthorized';
 
