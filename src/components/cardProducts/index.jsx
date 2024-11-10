@@ -257,11 +257,9 @@ export const CardProducts = ({ title, hasBorder = true }) => {
                     sx={{
                       boxShadow: 'none',
                       backgroundColor: 'black',
-                      width: '10%s',
-                      height: '2.3rem',
+                      height: '2.28rem',
                       borderRadius: '0 4px 4px 0',
                       transition: 'background-color 0.3s',
-
                       '&:hover': {
                         backgroundColor: '#D3D3D3',
                         color: 'black',
