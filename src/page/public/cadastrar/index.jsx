@@ -1,3 +1,8 @@
+import { useState } from 'react';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { FaLock } from 'react-icons/fa';
+import { MdOutlineVisibility, MdOutlineVisibilityOff } from 'react-icons/md';
+import { FcGoogle } from 'react-icons/fc';
 import {
   Box,
   Grid,
@@ -12,13 +17,6 @@ import {
   Divider,
   CssBaseline,
 } from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { FaLock } from 'react-icons/fa';
-import { MdOutlineVisibility, MdOutlineVisibilityOff } from 'react-icons/md';
-import { FcGoogle } from 'react-icons/fc';
-import { useState } from 'react';
-
-const defaultTheme = createTheme();
 
 export const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -35,7 +33,7 @@ export const SignUp = () => {
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
+    <ThemeProvider theme={createTheme()}>
       <Container
         component="main"
         maxWidth="xs">
@@ -47,7 +45,6 @@ export const SignUp = () => {
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: 'background.default',
-            p: 2,
           }}>
           <Box
             sx={{
@@ -56,11 +53,12 @@ export const SignUp = () => {
               justifyContent: 'center',
               flexDirection: 'column',
             }}>
-            <Avatar sx={{ m: 1, bgcolor: 'black', width: 60, height: 60, fontSize: 30 }}>
+            <Avatar sx={{ m: 1, bgcolor: 'black', width: 60, height: 60, fontSize: 35 }}>
               <FaLock />
             </Avatar>
 
             <Typography
+              sx={{ textTransform: 'uppercase', fontWeight: '600' }}
               component="h1"
               variant="h5">
               Criar uma conta
@@ -164,7 +162,7 @@ export const SignUp = () => {
                   marginTop: 5,
                   bgcolor: 'black',
                   transition: 'background-color 0.3s',
-                  ':hover': { bgcolor: '#c6c6c6', color: 'black' },
+                  ':hover': { bgcolor: '#a9a9a9', color: 'black' },
                 }}>
                 Cadastrar
               </Button>
