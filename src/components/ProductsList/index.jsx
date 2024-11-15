@@ -172,7 +172,12 @@ export const ProductsList = () => {
                       component={'img'}
                       src={products.imagemUrl}
                       alt={products.name}
-                      style={{ width: '100%', marginBottom: '16px' }}
+                      style={{
+                        width: '100%',
+                        marginBottom: '16px',
+                        height: '100%',
+                        objectFit: 'contain',
+                      }}
                     />
 
                     <Typography
