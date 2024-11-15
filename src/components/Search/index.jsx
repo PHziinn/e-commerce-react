@@ -1,6 +1,8 @@
 import { IoIosSearch } from 'react-icons/io';
 import InputBase from '@mui/material/InputBase';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -48,6 +50,17 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export const SearchResult = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
+
+  const handleSearch = (event) => {
+    if (event.key === 'Enter' && searchTerm.trim() !== '') {
+      navigate(`/produtos/search/produto?name=${encodeURIComponent(searchTerm.trim())}`, {
+        replace: true,
+      });
+    }
+  };
+
   return (
     <Search sx={{ display: 'flex' }}>
       <SearchIconWrapper>
@@ -56,6 +69,9 @@ export const SearchResult = () => {
       <StyledInputBase
         placeholder="Pesquisar produtos…"
         inputProps={{ 'aria-label': 'search' }}
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        onKeyDown={handleSearch}
       />
     </Search>
   );

@@ -9,60 +9,45 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MdOutlineAddShoppingCart, MdOutlineShoppingCart } from 'react-icons/md';
+import { useLocation } from 'react-router-dom';
+import { getSearchProducts } from '../../service/api';
 
 export const ProductsList = () => {
+  const location = useLocation();
+  const [name, setName] = useState('');
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [categories, setCategories] = useState([]);
 
-  const products = [
-    {
-      id: 1,
-      image: '../../../public/produtos/1.png',
-      title: 'Fones de Ouvido Sem Fio Bluetooth 5.3, Compatíveis com iPhone e Android',
-      price: 99.99,
-      category: 'Electronics',
-    },
-    {
-      id: 2,
-      image: '../../../public/produtos/2.png',
-      title:
-        'Power Bank, Carregador Portátil Universal 12.000 mAh, 2 Saídas USB + 1 Saída USB-C, PB12KMB',
-      price: 99.99,
-      category: 'Accessories',
-    },
-    {
-      id: 3,
-      image: '../../../public/produtos/3.png',
-      title: 'Wireless Headphones',
-      price: 99.99,
-      category: 'Accessories',
-    },
-    {
-      id: 4,
-      image: '../../../public/produtos/4.png',
-      title: 'Wireless Headphones',
-      price: 99.99,
-      category: 'Accessories',
-    },
-    {
-      id: 5,
-      image: '../../../public/produtos/5.png',
-      title: 'Wireless Headphones',
-      price: 99.99,
-      category: 'Accessories',
-    },
-    {
-      id: 6,
-      image: '../../../public/produtos/6.png',
-      title: 'Wireless Headphones',
-      price: 99.99,
-      category: 'Accessories',
-    },
-  ];
+  const [totalPages, setTotalPages] = useState(1);
+  const [page, setPage] = useState(1);
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
-  const categories = ['Electronics', 'Bags', 'Accessories', 'Home', 'Clothing'];
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const nameParam = searchParams.get('name');
+    setName(nameParam);
+  }, [location.search]);
+
+  useEffect(() => {
+    if (name) {
+      getSearchProducts(name, page)
+        .then((dados) => {
+          console.log('Dados recebidos:', dados);
+          setFilteredProducts(dados.data);
+          setTotalPages(dados.totalPages);
+
+          const allCategories = dados.data.map((product) => product.category);
+          const uniqueCategories = [...new Set(allCategories)];
+          setCategories(uniqueCategories);
+        })
+        .catch((erro) => {
+          console.error(erro);
+        });
+    }
+  }, [name, page]);
 
   const handlePriceChange = (field, value) => {
     setPriceRange({ ...priceRange, [field]: value });
@@ -148,49 +133,50 @@ export const ProductsList = () => {
           Aplicar filtros
         </Button>
       </Box>
-
       <Box
         display="flex"
         flexDirection="column"
         flex={1}
         minHeight="600px">
-        <Box flexGrow={1}>
+        <Box flex={1}>
           <Grid
             container
-            spacing={2}>
-            {products.map((product) => (
-              <Grid
-                item
-                md={4}
-                key={product.id}>
-                <Box
+            spacing={1}>
+            {filteredProducts.length > 0 ? (
+              filteredProducts?.map((products) => (
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  lg={4}
+                  xl={3}
+                  key={products.id}
                   sx={{
-                    borderRadius: 2,
-                    boxShadow: 3,
-                    overflow: 'hidden',
                     display: 'flex',
-                    flexDirection: 'column',
-                    height: '100%',
+                    justifyItems: 'center',
                   }}>
                   <Box
-                    component="img"
-                    src={product.image}
-                    alt={product.title}
                     sx={{
+                      position: 'relative',
+                      display: 'flex',
+                      flexDirection: 'column',
                       width: '100%',
-                      height: 250,
-                      objectFit: 'cover',
-                    }}
-                  />
+                      maxWidth: 285,
+                      flex: '0 0 auto',
+                      border: '1px solid #ccc',
+                      borderRadius: '8px',
+                      padding: { xs: '0.3rem', md: '0.7rem' },
+                    }}>
+                    <Box
+                      component={'img'}
+                      src={products.imagemUrl}
+                      alt={products.name}
+                      style={{ width: '100%', marginBottom: '16px' }}
+                    />
 
-                  <Box
-                    p={2}
-                    display="flex"
-                    flexDirection="column"
-                    flexGrow={1}>
                     <Typography
-                      variant="subtitle1"
-                      fontWeight="bold"
+                      variant="body2"
                       sx={{
                         mb: 2,
                         overflow: 'hidden',
@@ -202,16 +188,26 @@ export const ProductsList = () => {
                         flexGrow: 1,
                         lineHeight: '1.4em',
                         maxHeight: '3.4em',
-                      }}
-                      gutterBottom>
-                      {product.title}
+                      }}>
+                      {products.name}
                     </Typography>
 
+                    {products.price && (
+                      <Typography
+                        variant="body2"
+                        sx={{ textDecoration: 'line-through', color: 'gray' }}>
+                        R${products.price.toFixed(2)}
+                      </Typography>
+                    )}
                     <Typography
                       variant="h6"
-                      sx={{ fontWeight: 'bold', mb: 1 }}
-                      gutterBottom>
-                      R${product.price.toFixed(2)}
+                      sx={{ fontWeight: 'bold', mb: 1 }}>
+                      R$ {products.price.toFixed(2)}
+                      <Typography
+                        component={'p'}
+                        sx={{ fontSize: 13, fontWeight: 'lighter', mb: 1 }}>
+                        À vista no PIX
+                      </Typography>
                     </Typography>
 
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -262,20 +258,24 @@ export const ProductsList = () => {
                       </Button>
                     </Box>
                   </Box>
-                </Box>
-              </Grid>
-            ))}
+                </Grid>
+              ))
+            ) : (
+              <p>Nenhum produto encontrado.</p>
+            )}
           </Grid>
         </Box>
-
         <Box
           mt={4}
           display="flex"
           justifyContent="flex-end">
           <Pagination
-            count={5}
+            count={totalPages}
+            onChange={(e, value) => setPage(value)}
             variant="outlined"
             color="primary"
+            showFirstButton
+            showLastButton
           />
         </Box>
       </Box>

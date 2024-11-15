@@ -12,7 +12,7 @@ export const PrivateRoutesPath = {};
 export const RoutesPath = {
   '/': Home,
   '/produto': DetailsProducts,
-  '/pesquisa': SearchProducts,
+  '/produtos/search/produto': SearchProducts,
   '/login': Login,
   '/cadastrar': SignUp,
   '/unauthorized': Unauthorized,
