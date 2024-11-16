@@ -175,7 +175,7 @@ export const ProductsList = () => {
                       style={{
                         width: '100%',
                         marginBottom: '16px',
-                        height: '100%',
+                        height: '220px',
                         objectFit: 'contain',
                       }}
                     />
