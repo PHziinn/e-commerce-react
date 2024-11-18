@@ -2,7 +2,8 @@ import { IoIosSearch } from 'react-icons/io';
 import InputBase from '@mui/material/InputBase';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import { debounce } from 'lodash';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -61,6 +62,18 @@ export const SearchResult = () => {
     }
   };
 
+  const debouncedSetSearchTerm = useCallback(
+    debounce((value) => {
+      setSearchTerm(value);
+    }, 10),
+    []
+  );
+
+  const handleChange = (e) => {
+    const { value } = e.target;
+    debouncedSetSearchTerm(value);
+  };
+
   return (
     <Search sx={{ display: 'flex' }}>
       <SearchIconWrapper>
@@ -70,7 +83,7 @@ export const SearchResult = () => {
         placeholder="Pesquisar produtos…"
         inputProps={{ 'aria-label': 'search' }}
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange={handleChange}
         onKeyDown={handleSearch}
       />
     </Search>
