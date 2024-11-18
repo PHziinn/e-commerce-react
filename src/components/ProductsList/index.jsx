@@ -11,16 +11,15 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { MdOutlineAddShoppingCart, MdOutlineShoppingCart } from 'react-icons/md';
-import { useLocation } from 'react-router-dom';
-import { getSearchProducts } from '../../service/api';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { getFiltersPrice, getSearchProducts } from '../../service/api';
 
 export const ProductsList = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+
   const [name, setName] = useState('');
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [categories, setCategories] = useState([]);
-
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -35,13 +34,8 @@ export const ProductsList = () => {
     if (name) {
       getSearchProducts(name, page)
         .then((dados) => {
-          console.log('Dados recebidos:', dados);
           setFilteredProducts(dados.data);
           setTotalPages(dados.totalPages);
-
-          const allCategories = dados.data.map((product) => product.category);
-          const uniqueCategories = [...new Set(allCategories)];
-          setCategories(uniqueCategories);
         })
         .catch((erro) => {
           console.error(erro);
@@ -49,14 +43,35 @@ export const ProductsList = () => {
     }
   }, [name, page]);
 
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const minPrice = searchParams.get('minPrice') || '';
+    const maxPrice = searchParams.get('maxPrice') || '';
+
+    if (minPrice || maxPrice) {
+      setPriceRange({ min: minPrice, max: maxPrice });
+
+      getFiltersPrice(maxPrice, minPrice)
+        .then((dados) => {
+          setFilteredProducts(dados.data);
+          setTotalPages(dados.totalPages);
+        })
+        .catch((erro) => {
+          console.error(erro);
+        });
+    }
+  }, [location.search]);
+
   const handlePriceChange = (field, value) => {
     setPriceRange({ ...priceRange, [field]: value });
   };
 
-  const handleCategoryChange = (category) => {
-    setSelectedCategories((prev) =>
-      prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]
-    );
+  const applyFilters = () => {
+    const queryParams = new URLSearchParams();
+    if (priceRange.min) queryParams.set('minPrice', priceRange.min);
+    if (priceRange.max) queryParams.set('maxPrice', priceRange.max);
+
+    navigate(`?${queryParams.toString()}`);
   };
 
   return (
@@ -82,19 +97,12 @@ export const ProductsList = () => {
             sx={{ fontWeight: 'bold' }}>
             Categoria
           </Typography>
-          {categories.map((category) => (
-            <FormControlLabel
-              key={category}
-              control={
-                <Checkbox
-                  checked={selectedCategories.includes(category)}
-                  onChange={() => handleCategoryChange(category)}
-                />
-              }
-              label={category}
-              sx={{ fontSize: '0.875rem' }}
-            />
-          ))}
+
+          <FormControlLabel
+            control={<Checkbox />}
+            label={'RECOMENDADO'}
+            sx={{ fontSize: '0.875rem' }}
+          />
         </Box>
 
         <Box mb={3}>
@@ -129,7 +137,8 @@ export const ProductsList = () => {
         <Button
           variant="contained"
           sx={{ backgroundColor: '#000000' }}
-          fullWidth>
+          fullWidth
+          onClick={applyFilters}>
           Aplicar filtros
         </Button>
       </Box>
@@ -143,7 +152,7 @@ export const ProductsList = () => {
             container
             spacing={1}>
             {filteredProducts.length > 0 ? (
-              filteredProducts?.map((products) => (
+              filteredProducts.map((products) => (
                 <Grid
                   item
                   xs={12}
