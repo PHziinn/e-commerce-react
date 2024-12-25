@@ -8,31 +8,17 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { MdAccountCircle, MdOutlineShoppingCart } from 'react-icons/md';
 import TechDev from '../../../public/logoWhite.svg';
 import { SearchResult } from '../Search';
+import { CarrinhdoDeCompras } from './components/carrinhoDeCompras';
+import { FeedDesconto } from './components/feedDesconto';
 
-export const PrimarySearchBar = () => {
+export const PrimarySearchBar = ({ showAppBar = true }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const [showAppBar, setShowAppBar] = useState(true);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-      const fadeOutThreshold = 15;
-
-      const opacity = 1 - Math.min(1, scrollTop / fadeOutThreshold);
-      setShowAppBar(opacity > 0);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+  const [cartOpen, setCartOpen] = useState(false);
 
   return (
     <>
@@ -43,16 +29,15 @@ export const PrimarySearchBar = () => {
           sx={{
             background: '#000000',
             boxShadow: 'none',
-            height: '70px',
+            height: '65px',
             display: 'flex',
             justifyContent: 'center',
           }}>
-          <Toolbar>
+          <Toolbar sx={{ mt: isMobile ? 2 : null }}>
             <Typography
               sx={{
                 flexGrow: 1,
                 display: 'flex',
-                justifyContent: 'flex-start',
               }}>
               <Box
                 component={'img'}
@@ -61,7 +46,7 @@ export const PrimarySearchBar = () => {
                 sx={{
                   ml: isMobile ? 2.5 : null,
                   mb: isMobile ? 2 : null,
-                  width: isMobile ? '50%' : '16%',
+                  width: isMobile ? '60%' : '16%',
                 }}
               />
             </Typography>
@@ -71,9 +56,11 @@ export const PrimarySearchBar = () => {
             </Box>
 
             <Box>
-              <IconButton sx={{ mr: 2 }}>
+              <IconButton
+                sx={{ mr: 2 }}
+                onClick={() => setCartOpen(!cartOpen)}>
                 <Badge
-                  badgeContent={4}
+                  badgeContent={3}
                   color="error"
                   sx={{
                     '& .MuiBadge-badge': {
@@ -107,13 +94,16 @@ export const PrimarySearchBar = () => {
                   />
                 </Badge>
               </IconButton>
+
+              <CarrinhdoDeCompras cartOpen={cartOpen} />
             </Box>
           </Toolbar>
         </AppBar>
       </Box>
+
       <AppBar
         sx={{
-          marginTop: 7,
+          marginTop: 8,
           width: '100%',
           background: '#DCDCDC',
           boxShadow: 'none',
@@ -121,27 +111,13 @@ export const PrimarySearchBar = () => {
           display: isMobile ? 'flex' : 'none',
           alignItems: 'center',
           justifyContent: 'center',
+          zIndex: 999,
         }}>
         <Box sx={{ width: '90%' }}>
           <SearchResult />
         </Box>
       </AppBar>
-
-      {showAppBar && (
-        <AppBar
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            marginTop: isMobile ? 16.5 : 9.5,
-            background: '#363636',
-            color: 'white',
-            padding: 1,
-            transition: 'opacity 0.5s ease-in-out',
-            opacity: showAppBar ? 1 : 0,
-          }}>
-          Frete Grátis nas Comprar acima de R$ 100
-        </AppBar>
-      )}
+      <FeedDesconto showAppBar={showAppBar} />
     </>
   );
 };
