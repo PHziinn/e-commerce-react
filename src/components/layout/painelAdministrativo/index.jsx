@@ -2,6 +2,7 @@ import {
   AppBar,
   Avatar,
   Box,
+  Button,
   Divider,
   Drawer,
   IconButton,
@@ -17,9 +18,9 @@ import {
 import { useState } from 'react';
 
 import {
-  MdAttachMoney,
   MdFormatListBulletedAdd,
   MdGridView,
+  MdLogout,
   MdMenu,
   MdPeople,
   MdSettings,
@@ -37,15 +38,19 @@ export const PainelAdministrativo = ({ children }) => {
   };
 
   const menuItems = [
-    { text: 'Dashboard', icon: <MdGridView style={{ fontSize: 20 }} />, href: '#' },
-    { text: 'Usuarios', icon: <MdPeople style={{ fontSize: 20 }} />, href: '#' },
+    { text: 'Dashboard', icon: <MdGridView style={{ fontSize: 20 }} />, href: '/admin/dashboard' },
+    { text: 'Usuarios', icon: <MdPeople style={{ fontSize: 20 }} />, href: '/admin/usuarios' },
     {
       text: 'Adicionar Produtos',
       icon: <MdFormatListBulletedAdd style={{ fontSize: 20 }} />,
-      href: '#',
+      href: '/admin/produtos',
     },
-    { text: 'Transações', icon: <MdAttachMoney style={{ fontSize: 20 }} />, href: '#' },
-    { text: 'Configurações', icon: <MdSettings style={{ fontSize: 20 }} />, href: '#' },
+
+    {
+      text: 'Configurações',
+      icon: <MdSettings style={{ fontSize: 20 }} />,
+      href: '/admin/settings',
+    },
   ];
 
   return (
@@ -81,8 +86,6 @@ export const PainelAdministrativo = ({ children }) => {
             open={Boolean(anchorEl)}
             onClose={handleMenuClose}>
             <MenuItem onClick={handleMenuClose}>Minha Conta</MenuItem>
-            <Divider />
-            <MenuItem onClick={handleMenuClose}>Sair</MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>
@@ -99,7 +102,8 @@ export const PainelAdministrativo = ({ children }) => {
           },
         }}>
         <Toolbar />
-        <List>
+
+        <List sx={{ flex: 1 }}>
           {menuItems.map(({ text, icon, href }) => (
             <ListItem
               button
@@ -119,6 +123,23 @@ export const PainelAdministrativo = ({ children }) => {
             </ListItem>
           ))}
         </List>
+
+        <Divider sx={{ mb: 1 }} />
+        <Box sx={{ ml: 1 }}>
+          <IconButton sx={{ display: 'flex', alignItems: 'center' }}>
+            <MdLogout style={{ fontSize: 20 }} />
+
+            <Button
+              sx={{
+                color: '#000000',
+                fontSize: '15px',
+                '&:hover': { color: '#5b5b5b' },
+                fontWeight: 'bold',
+              }}>
+              Sair
+            </Button>
+          </IconButton>
+        </Box>
       </Drawer>
 
       {children}
