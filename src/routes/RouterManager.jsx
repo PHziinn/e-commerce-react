@@ -1,9 +1,12 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { useMemo } from 'react';
-import { AdminRoutesPath, PrivateRoutesPath, RoutesPath } from './RoutesPath';
+import { useContext, useMemo } from 'react';
+import { AdminRoutesPath, PrivateRoutesPath, RoutesPath, MaintenancePath } from './RoutesPath';
 import { PrivateRoute } from './PrivateRoutes';
+import { MaintenanceContext } from '../context/maintenanceContext';
+import { MaintenancePage } from '../page/public/maintenance';
 
 export const RouterManager = () => {
+  const { isMaintenanceMode } = useContext(MaintenanceContext);
   const adminRoutes = useMemo(
     () =>
       Object.keys(AdminRoutesPath).map((path) => {
@@ -54,6 +57,21 @@ export const RouterManager = () => {
     []
   );
 
+  const MaintenanceRoutes = useMemo(
+    () =>
+      Object.keys(MaintenancePath).map((path) => {
+        const RouteComponent = MaintenancePath[path];
+        return (
+          <Route
+            key={path}
+            path={path}
+            element={<RouteComponent />}
+          />
+        );
+      }),
+    []
+  );
+
   return (
     <BrowserRouter
       future={{
@@ -62,8 +80,14 @@ export const RouterManager = () => {
       }}>
       <Routes>
         {adminRoutes}
-        {privateRoutes}
-        {publicRoutes}
+        {isMaintenanceMode ? (
+          MaintenanceRoutes
+        ) : (
+          <>
+            {privateRoutes}
+            {publicRoutes}
+          </>
+        )}
       </Routes>
     </BrowserRouter>
   );
