@@ -106,7 +106,6 @@ export const PainelAdministrativo = ({ children }) => {
         <List sx={{ flex: 1 }}>
           {menuItems.map(({ text, icon, href }) => (
             <ListItem
-              button
               key={text}
               component="a"
               href={href}>
@@ -126,19 +125,16 @@ export const PainelAdministrativo = ({ children }) => {
 
         <Divider sx={{ mb: 1 }} />
         <Box sx={{ ml: 1 }}>
-          <IconButton sx={{ display: 'flex', alignItems: 'center' }}>
-            <MdLogout style={{ fontSize: 20 }} />
-
-            <Button
-              sx={{
-                color: '#000000',
-                fontSize: '15px',
-                '&:hover': { color: '#5b5b5b' },
-                fontWeight: 'bold',
-              }}>
-              Sair
-            </Button>
-          </IconButton>
+          <Button
+            startIcon={<MdLogout style={{ fontSize: 20 }} />}
+            sx={{
+              color: '#000000',
+              fontSize: '15px',
+              '&:hover': { color: '#5b5b5b' },
+              fontWeight: 'bold',
+            }}>
+            Sair
+          </Button>
         </Box>
       </Drawer>
 
