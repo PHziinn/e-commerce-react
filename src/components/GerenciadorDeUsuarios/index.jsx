@@ -1,9 +1,9 @@
 import { Alert, Box, Pagination } from '@mui/material';
-import { useState } from 'react';
-import { PiUserList } from 'react-icons/pi';
 import InputBase from '@mui/material/InputBase';
 import { styled } from '@mui/material/styles';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import { PiUserList } from 'react-icons/pi';
 import { useAlert } from '../../hooks/ShowAlert';
 import { deleteUsuarios, getAllUsuarios, patchUsuarios } from '../../service/api';
 import { TabelaDeUsuarios } from './components/TabelaDeUsuarios';
@@ -58,8 +58,9 @@ export const GerenciadorDeUsuarios = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
   const { alert, showAlert, setAlert } = useAlert();
+  const client = useQueryClient();
 
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ['usuarios', page],
     queryFn: () => getAllUsuarios(null, page),
     keepPreviousData: true,
@@ -67,38 +68,47 @@ export const GerenciadorDeUsuarios = () => {
     refetchOnReconnect: true,
   });
 
-  const handleEditUsuario = async (updatedUsuario) => {
-    try {
-      const { id, file, name, email } = updatedUsuario;
-      const formData = new FormData();
+  const editUsuarioMutation = useMutation({
+    mutationFn: (data) => patchUsuarios(data.id, data.dataUser),
+    onSuccess: () => {
+      client.invalidateQueries(['usuarios']);
+      showAlert('Usuário atualizado com sucesso!', 'success');
+    },
+    onError: (error) => {
+      console.error('Erro ao atualizar Usuário:', error);
+      showAlert('Erro ao atualizar Usuário.', 'error');
+    },
+  });
 
-      if (name) formData.append('name', name);
-      if (email) formData.append('email', email);
+  const deleteUsuarioMutation = useMutation({
+    mutationFn: (id) => deleteUsuarios(id),
+    onSuccess: () => {
+      client.invalidateQueries(['usuarios']);
+      showAlert('Usuário deletado com sucesso!', 'success');
+    },
+    onError: (error) => {
+      console.error('Erro ao deletar Usuário:', error);
+      showAlert('Erro ao deletar Usuário.', 'error');
+    },
+  });
 
-      console.log(file);
+  const handleEditUsuario = (updatedUsuario) => {
+    const formData = new FormData();
+    const { id, file, ...rest } = updatedUsuario;
 
-      if (file) {
-        formData.append('file', file);
-      }
-
-      const updatedUser = await patchUsuarios(id, formData);
-      if (updatedUser) {
-        showAlert('Usuário atualizado com sucesso!', 'success');
-        refetch();
-      }
-    } catch (error) {
-      showAlert('Erro ao atualizar usuário.', 'error');
+    if (file) {
+      formData.append('file', file);
     }
+
+    Object.entries(rest).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+
+    editUsuarioMutation.mutate({ id, dataUser: formData });
   };
 
-  const handleDeleteUsuario = async (id) => {
-    try {
-      await deleteUsuarios(id);
-      showAlert('Usuário deletado com sucesso!', 'success');
-      refetch();
-    } catch (error) {
-      showAlert('Erro ao deletar usuário.', 'error');
-    }
+  const handleDeleteUsuario = (id) => {
+    deleteUsuarioMutation.mutate(id);
   };
 
   const handlePageChange = (event, newPage) => {
@@ -108,7 +118,7 @@ export const GerenciadorDeUsuarios = () => {
   return (
     <Box sx={{ p: 3, width: '100%' }}>
       {alert.open && (
-        <Box sx={{ position: 'fixed', top: '70px', right: '20px', zIndex: 999 }}>
+        <Box sx={{ position: 'fixed', top: '70px', right: '20px', zIndex: 9999 }}>
           <Alert
             severity={alert.severity}
             onClose={() => setAlert({ open: false, message: '', severity: 'success' })}>

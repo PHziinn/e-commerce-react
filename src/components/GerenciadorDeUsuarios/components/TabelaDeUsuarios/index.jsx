@@ -1,9 +1,12 @@
 import {
   Avatar,
+  Badge,
   Chip,
   CircularProgress,
   IconButton,
   Paper,
+  Stack,
+  styled,
   Table,
   TableBody,
   TableCell,
@@ -17,9 +20,40 @@ import { MdDelete, MdModeEdit } from 'react-icons/md';
 import { ConfirmDelete } from '../../../ConfirmDelete';
 import { EditUsuarioModal } from '../EditalUsuarioModal';
 
+const StyledBadge = styled(Badge, {
+  shouldForwardProp: (prop) => prop !== 'isOnline',
+})(({ theme, isOnline }) => ({
+  '& .MuiBadge-badge': {
+    backgroundColor: isOnline ? '#44b700' : '#999999',
+    color: isOnline ? '#44b700' : '#999999',
+    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+    '&::after': {
+      position: 'absolute',
+      top: -1,
+      left: -1,
+      width: '100%',
+      height: '100%',
+      borderRadius: '50%',
+      animation: 'ripple 1.2s infinite ease-in-out',
+      border: '1px solid currentColor',
+      content: '""',
+    },
+  },
+  '@keyframes ripple': {
+    '0%': {
+      transform: 'scale(.8)',
+      opacity: 1,
+    },
+    '100%': {
+      transform: 'scale(2.4)',
+      opacity: 0,
+    },
+  },
+}));
+
 const roleColors = {
-  ADMIN: '#d32f2f',
-  USER: '#1976d2',
+  ADMIN: '#7f6000',
+  USER: '#073763',
 };
 
 export const TabelaDeUsuarios = ({ data, isLoading, isError, onDelete, onEdit }) => {
@@ -85,11 +119,19 @@ export const TabelaDeUsuarios = ({ data, isLoading, isError, onDelete, onEdit })
             {usuarios?.map((usuario) => (
               <TableRow key={usuario.id}>
                 <TableCell>
-                  <Avatar
-                    src={usuario.avatar}
-                    alt={usuario.name}
-                    sx={{ width: 40, height: 40, border: '1px solid rgb 0.0.0.0.1' }}
-                  />
+                  <Stack direction="row">
+                    <StyledBadge
+                      overlap="circular"
+                      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                      variant="dot"
+                      isOnline={usuario.isOnline}>
+                      <Avatar
+                        sx={{ width: 55, height: 55, border: '1px solid rgb 0.0.0.0.1' }}
+                        alt={usuario.name}
+                        src={usuario.avatar}
+                      />
+                    </StyledBadge>
+                  </Stack>
                 </TableCell>
                 <TableCell sx={{ textAlign: 'center' }}>{usuario.name}</TableCell>
                 <TableCell sx={{ textAlign: 'center' }}>{usuario.email}</TableCell>
@@ -98,7 +140,7 @@ export const TabelaDeUsuarios = ({ data, isLoading, isError, onDelete, onEdit })
                     label={usuario.role}
                     sx={{
                       width: '5rem',
-                      height: '1.5rem',
+                      height: '1.2rem',
                       backgroundColor: roleColors[usuario.role],
                       color: '#fff',
                       fontWeight: 'bold',
