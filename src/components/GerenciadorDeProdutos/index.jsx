@@ -1,19 +1,13 @@
 import { Alert, Box, Fab, Pagination } from '@mui/material';
-import { useState } from 'react';
-import { MdAddShoppingCart, MdOutlineManageSearch } from 'react-icons/md';
 import InputBase from '@mui/material/InputBase';
 import { styled } from '@mui/material/styles';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  deleteProdutos,
-  getAllProdutos,
-  getProduto,
-  patchProdutos,
-  postProdutos,
-} from '../../service/api';
-import { TabelaDeProdutos } from './components/TabelaDeProdutos';
+import { useState } from 'react';
+import { MdAddShoppingCart, MdOutlineManageSearch } from 'react-icons/md';
 import { useAlert } from '../../hooks/ShowAlert';
+import { deleteProdutos, getAllProdutos, patchProdutos, postProdutos } from '../../service/api';
 import { AddProdutosModal } from './components/AdicionarProdutos';
+import { TabelaDeProdutos } from './components/TabelaDeProdutos';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -68,7 +62,7 @@ export const GerenciadorDeProdutos = () => {
   const { alert, showAlert, setAlert } = useAlert();
   const client = useQueryClient();
 
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['produtos', page],
     queryFn: () => getAllProdutos(null, page),
     keepPreviousData: true,
@@ -204,7 +198,7 @@ export const GerenciadorDeProdutos = () => {
         onEdit={handleEditProduto}
         onDelete={handleDeleteProduto}
       />
-      {/* Paginação */}
+
       <Box
         display="flex"
         justifyContent="flex-end"

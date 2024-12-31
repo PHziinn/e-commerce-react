@@ -16,7 +16,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { MdClose, MdDelete } from 'react-icons/md';
 import { z } from 'zod';
 import { getProduto } from '../../../../service/api';

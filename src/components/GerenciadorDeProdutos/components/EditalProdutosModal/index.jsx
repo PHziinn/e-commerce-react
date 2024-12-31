@@ -32,9 +32,6 @@ export const EditProdutosModal = ({ open, onClose, produtos, onSave }) => {
   useEffect(() => {
     setFormData(() => ({
       ...produtos,
-      // imageUrl: Array.isArray(produtos?.imagemUrl)
-      //   ? produtos?.imagemUrl
-      //   : [produtos?.imagemUrl?.split(',')[0]?.trim() || []],
       imageUrl: (Array.isArray(produtos?.imagemUrl) ? produtos.imagemUrl : [produtos?.imagemUrl])
         .filter(Boolean)
         .map((img) => String(img).trim()),
