@@ -62,7 +62,7 @@ export const GerenciadorDeProdutos = () => {
   const { alert, showAlert, setAlert } = useAlert();
   const client = useQueryClient();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ['produtos', page],
     queryFn: () => getAllProdutos(null, page),
     keepPreviousData: true,
@@ -82,7 +82,7 @@ export const GerenciadorDeProdutos = () => {
   });
 
   const editProdutoMutation = useMutation({
-    mutationFn: (data) => patchProdutos(data.id, data.formData),
+    mutationFn: (data) => patchProdutos(data.id, data.dataProduto),
     onSuccess: () => {
       client.invalidateQueries(['produtos']);
       showAlert('Produto atualizado com sucesso!', 'success');
@@ -131,7 +131,7 @@ export const GerenciadorDeProdutos = () => {
       }
     });
 
-    editProdutoMutation.mutate({ id, formData });
+    editProdutoMutation.mutate({ id, dataProduto: formData });
   };
 
   const handleDeleteProduto = (id) => {
@@ -195,6 +195,7 @@ export const GerenciadorDeProdutos = () => {
       <TabelaDeProdutos
         data={data}
         isLoading={isLoading}
+        isError={isError}
         onEdit={handleEditProduto}
         onDelete={handleDeleteProduto}
       />

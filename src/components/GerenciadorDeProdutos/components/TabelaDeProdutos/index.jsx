@@ -22,7 +22,7 @@ const statusColors = {
   DISPONIVEL: '#56a733',
   ESGOTADO: '#d32f2f',
 };
-export const TabelaDeProdutos = ({ data, isLoading, onDelete, onEdit }) => {
+export const TabelaDeProdutos = ({ data, isLoading, isError, onDelete, onEdit }) => {
   const produtos = data?.data;
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [selectedProdutos, setSelectedProdutos] = useState(null);
@@ -79,7 +79,7 @@ export const TabelaDeProdutos = ({ data, isLoading, onDelete, onEdit }) => {
                 Preço
               </TableCell>
               <TableCell sx={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>
-                status Estoque
+                Status
               </TableCell>
               <TableCell sx={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>
                 Estoque
@@ -151,6 +151,20 @@ export const TabelaDeProdutos = ({ data, isLoading, onDelete, onEdit }) => {
                     variant="body1"
                     sx={{ color: '#757575', py: 2 }}>
                     <CircularProgress />
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            )}
+
+            {isError && (
+              <TableRow>
+                <TableCell
+                  colSpan={7}
+                  align="center">
+                  <Typography
+                    variant="body1"
+                    sx={{ color: '#757575', py: 2 }}>
+                    Erro ao carregar produtos.
                   </Typography>
                 </TableCell>
               </TableRow>
