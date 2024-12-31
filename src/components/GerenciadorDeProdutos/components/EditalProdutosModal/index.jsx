@@ -11,72 +11,68 @@ import {
   Divider,
   Grid2,
   IconButton,
+  InputAdornment,
   MenuItem,
   Stack,
   TextField,
   Typography,
 } from '@mui/material';
-import React, { useState } from 'react';
-import { MdClose, MdDelete, MdAddShoppingCart } from 'react-icons/md';
+import { useEffect, useState } from 'react';
+import { MdClose, MdDelete } from 'react-icons/md';
 
-export const AddProductModal = ({ open, onClose, onAddProduct }) => {
-  const [product, setProduct] = useState({
-    name: '',
-    sku: '',
-    price: '',
-    stock: '',
-    description: '',
-    category: '',
-    images: [],
+export const EditProdutosModal = ({ open, onClose, produtos, onSave }) => {
+  const [formData, setFormData] = useState({
+    ...produtos,
+    imageUrl: produtos?.imagemUrl || [],
+    files: produtos?.files || [],
   });
 
-  const categories = ['RECOMENDADOS', 'MAIS_VENDIDOS'];
+  const statusEstoque = ['DISPONIVEL', 'ESGOTADO'];
+
+  useEffect(() => {
+    setFormData(() => ({
+      ...produtos,
+      // imageUrl: Array.isArray(produtos?.imagemUrl)
+      //   ? produtos?.imagemUrl
+      //   : [produtos?.imagemUrl?.split(',')[0]?.trim() || []],
+      imageUrl: (Array.isArray(produtos?.imagemUrl) ? produtos.imagemUrl : [produtos?.imagemUrl])
+        .filter(Boolean)
+        .map((img) => String(img).trim()),
+
+      files: produtos?.files || [],
+    }));
+  }, [produtos]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProduct({ ...product, [name]: value });
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSave = () => {
+    if (onSave && formData) {
+      onSave(formData);
+    }
+    onClose();
   };
 
   const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files);
-    const imageUrls = files.map((file) => URL.createObjectURL(file));
-    setProduct((prev) => ({
+    const files = e.target.files;
+    const fileArray = Array.from(files);
+    const imageUrl = fileArray.map((file) => URL.createObjectURL(file));
+
+    setFormData((prev) => ({
       ...prev,
-      images: [...prev.images, ...imageUrls],
+      files: [...prev.files, ...fileArray],
+      imageUrl: [...prev.imageUrl, ...imageUrl],
     }));
   };
 
   const handleImageRemove = (index) => {
-    setProduct((prev) => ({
+    setFormData((prev) => ({
       ...prev,
-      images: prev.images.filter((_, i) => i !== index),
+      files: prev.files.filter((_, i) => i !== index),
+      imageUrl: prev.imageUrl.filter((_, i) => i !== index),
     }));
-  };
-
-  const handleSubmit = () => {
-    if (
-      product.name &&
-      product.sku &&
-      product.price &&
-      product.stock &&
-      product.description &&
-      product.category &&
-      product.images.length > 0
-    ) {
-      onAddProduct(product);
-      setProduct({
-        name: '',
-        sku: '',
-        price: '',
-        stock: '',
-        description: '',
-        category: '',
-        images: [],
-      });
-      onClose();
-    } else {
-      alert('Por favor, preencha todos os campos e adicione pelo menos uma imagem!');
-    }
   };
 
   return (
@@ -88,17 +84,14 @@ export const AddProductModal = ({ open, onClose, onAddProduct }) => {
       PaperProps={{
         sx: {
           borderRadius: '16px',
-          boxShadow: 24,
-          p: 2,
+          p: 1,
         },
       }}>
       <Box
         display="flex"
         justifyContent="space-between"
         alignItems="center">
-        <DialogTitle sx={{ fontWeight: 'bold', fontSize: '1.5rem' }}>
-          Adicionar Novo Produto
-        </DialogTitle>
+        <DialogTitle sx={{ fontWeight: 'bold', fontSize: '1.5rem' }}>Editar Produtos</DialogTitle>
         <IconButton onClick={onClose}>
           <MdClose size={24} />
         </IconButton>
@@ -110,15 +103,16 @@ export const AddProductModal = ({ open, onClose, onAddProduct }) => {
             variant="subtitle1"
             fontWeight="bold"
             gutterBottom>
-            Imagens do Produto
+            Imagem do Produto
           </Typography>
+
           <Button
             variant="contained"
             component="label"
             sx={{
               mb: 2,
               backgroundColor: 'black',
-              '&:hover': { backgroundColor: '#D3D3D3', color: 'black' },
+              '&:hover': { backgroundColor: '#282828' },
             }}>
             Upload Imagens
             <Box
@@ -133,17 +127,19 @@ export const AddProductModal = ({ open, onClose, onAddProduct }) => {
           <Grid2
             container
             spacing={2}>
-            {product.images.map((image, index) => (
+            {formData?.imageUrl.map((image, index) => (
               <Grid2
-                item
                 xs={6}
                 sm={4}
                 md={3}
                 key={index}>
-                <Card>
+                <Card
+                  sx={{
+                    boxShadow: 'none',
+                  }}>
                   <CardMedia
                     component="img"
-                    height="140"
+                    height={200}
                     image={image}
                     alt={`Imagem ${index + 1}`}
                   />
@@ -167,64 +163,60 @@ export const AddProductModal = ({ open, onClose, onAddProduct }) => {
           spacing={3}
           sx={{ mt: 2 }}>
           <TextField
-            label="Nome do Produto"
+            label="ID do Usuário"
             variant="outlined"
             fullWidth
-            name="name"
-            value={product.name}
-            onChange={handleChange}
-            placeholder="Ex: Smartphone"
+            disabled
+            value={formData?.id || ''}
           />
           <TextField
             label="SKU"
             variant="outlined"
             fullWidth
             name="sku"
-            value={product.sku}
+            value={formData?.sku || ''}
             onChange={handleChange}
-            placeholder="Ex: SRP-001"
+          />
+          <TextField
+            label="Nome do Produto"
+            variant="outlined"
+            fullWidth
+            name="name"
+            value={formData?.name || ''}
+            onChange={handleChange}
           />
           <TextField
             label="Preço"
             variant="outlined"
             fullWidth
             name="price"
-            value={product.price}
-            onChange={handleChange}
-            placeholder="Ex: 999.99"
             type="number"
+            slotProps={{
+              input: {
+                startAdornment: <InputAdornment position="start">R$</InputAdornment>,
+              },
+            }}
+            value={formData?.price || 0}
+            onChange={handleChange}
           />
           <TextField
             label="Estoque"
             variant="outlined"
             fullWidth
             name="stock"
-            value={product.stock}
-            onChange={handleChange}
-            placeholder="Ex: 50"
             type="number"
-          />
-
-          <TextField
-            label="Descrição do Produto"
-            variant="outlined"
-            fullWidth
-            name="description"
-            value={product.description}
+            value={formData?.stock || 0}
             onChange={handleChange}
-            placeholder="Descrição detalhada"
-            multiline
-            rows={3}
           />
           <TextField
-            label="Categoria"
+            label="Status de Stocks"
             variant="outlined"
             fullWidth
-            name="category"
-            value={product.category}
+            name="statusEstoque"
+            value={formData?.statusEstoque || ''}
             onChange={handleChange}
             select>
-            {categories.map((cat) => (
+            {statusEstoque.map((cat) => (
               <MenuItem
                 key={cat}
                 value={cat}>
@@ -232,6 +224,16 @@ export const AddProductModal = ({ open, onClose, onAddProduct }) => {
               </MenuItem>
             ))}
           </TextField>
+          <TextField
+            label="Descrição do Produto"
+            variant="outlined"
+            fullWidth
+            name="description"
+            multiline
+            rows={3}
+            value={formData?.description || ''}
+            onChange={handleChange}
+          />
         </Stack>
       </DialogContent>
       <Divider />
@@ -256,17 +258,19 @@ export const AddProductModal = ({ open, onClose, onAddProduct }) => {
           variant="contained"
           sx={{
             boxShadow: 'none',
+            color: 'white',
             background: 'black',
             fontWeight: 'bold',
             transition: 'background-color 0.3s',
+            width: '8rem',
             '&:hover': {
-              backgroundColor: '#D3D3D3',
-              color: 'black',
+              backgroundColor: '#282828',
+              color: 'white',
               boxShadow: 'none',
             },
           }}
-          onClick={handleSubmit}>
-          Adicionar Produto
+          onClick={handleSave}>
+          Salvar
         </Button>
       </DialogActions>
     </Dialog>
