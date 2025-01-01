@@ -5,53 +5,56 @@ import {
   Button,
   Divider,
   Drawer,
-  IconButton,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  Menu,
-  MenuItem,
   Toolbar,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 import {
   MdFormatListBulletedAdd,
   MdGridView,
   MdLogout,
-  MdMenu,
   MdPeople,
   MdSettings,
 } from 'react-icons/md';
+import { useUser } from '../../../context/authContext';
+import { getByUsuario } from '../../../service/api';
+
+const menuItems = [
+  { text: 'Dashboard', icon: <MdGridView style={{ fontSize: 20 }} />, href: '/admin/dashboard' },
+  { text: 'Usuarios', icon: <MdPeople style={{ fontSize: 20 }} />, href: '/admin/usuarios' },
+  {
+    text: 'Adicionar Produtos',
+    icon: <MdFormatListBulletedAdd style={{ fontSize: 20 }} />,
+    href: '/admin/produtos',
+  },
+
+  {
+    text: 'Configurações',
+    icon: <MdSettings style={{ fontSize: 20 }} />,
+    href: '/admin/settings',
+  },
+];
 
 export const PainelAdministrativo = ({ children }) => {
-  const [anchorEl, setAnchorEl] = useState(null);
+  const { user, signOut } = useUser();
 
-  const handleMenuClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const { data, isLoading } = useQuery({
+    queryKey: ['usuarios', user.id],
+    queryFn: () => getByUsuario(user.id),
+    enabled: !!user.id,
+    keepPreviousData: true,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+  });
+
+  const handleLogout = () => {
+    signOut();
   };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const menuItems = [
-    { text: 'Dashboard', icon: <MdGridView style={{ fontSize: 20 }} />, href: '/admin/dashboard' },
-    { text: 'Usuarios', icon: <MdPeople style={{ fontSize: 20 }} />, href: '/admin/usuarios' },
-    {
-      text: 'Adicionar Produtos',
-      icon: <MdFormatListBulletedAdd style={{ fontSize: 20 }} />,
-      href: '/admin/produtos',
-    },
-
-    {
-      text: 'Configurações',
-      icon: <MdSettings style={{ fontSize: 20 }} />,
-      href: '/admin/settings',
-    },
-  ];
 
   return (
     <Box sx={{ display: 'flex', height: '100vh' }}>
@@ -59,34 +62,35 @@ export const PainelAdministrativo = ({ children }) => {
         position="fixed"
         sx={{ boxShadow: 'none', background: 'black', zIndex: (theme) => theme.zIndex.drawer + 1 }}>
         <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            sx={{ mr: 2 }}>
-            <MdMenu />
-          </IconButton>
           <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1 }}>
+            variant="p"
+            sx={{ flexGrow: 1, fontSize: '16pt', fontWeight: 700 }}>
             Administração
           </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="p">{data?.user?.name}</Typography>
 
-          <IconButton
-            onClick={handleMenuClick}
-            sx={{ ml: 2 }}>
-            <Avatar
-              alt="User Avatar"
-              src="/placeholder.svg"
-            />
-          </IconButton>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleMenuClose}>
-            <MenuItem onClick={handleMenuClose}>Minha Conta</MenuItem>
-          </Menu>
+            {isLoading ? (
+              <Avatar
+                sx={{
+                  width: 50,
+                  height: 50,
+                  backgroundColor: '#ccc',
+                }}
+              />
+            ) : (
+              <Avatar
+                alt={data?.user?.name || 'Avatar'}
+                src={data?.user?.avatar || '/placeholder.svg'}
+                sx={{
+                  border: '2px solid rgba(204, 204, 204, 0.3)',
+                  boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
+                  width: 50,
+                  height: 50,
+                }}
+              />
+            )}
+          </Box>
         </Toolbar>
       </AppBar>
 
@@ -126,6 +130,7 @@ export const PainelAdministrativo = ({ children }) => {
         <Divider sx={{ mb: 1 }} />
         <Box sx={{ ml: 1 }}>
           <Button
+            onClick={handleLogout}
             startIcon={<MdLogout style={{ fontSize: 20 }} />}
             sx={{
               color: '#000000',

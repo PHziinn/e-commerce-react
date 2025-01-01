@@ -1,18 +1,31 @@
-import React from 'react';
-import { Typography, Card, CardContent, Grid2, Box } from '@mui/material';
 import {
-  Chart as ChartJS,
+  Box,
+  Card,
+  CardContent,
+  CircularProgress,
+  Grid,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import {
   ArcElement,
-  Tooltip,
-  Legend,
-  CategoryScale,
-  LinearScale,
   BarElement,
-  PointElement,
+  CategoryScale,
+  Chart as ChartJS,
   Filler,
+  Legend,
+  LinearScale,
   LineElement,
+  PointElement,
+  Tooltip,
 } from 'chart.js';
-import { Line, Bar, Doughnut } from 'react-chartjs-2';
+import { Doughnut, Line } from 'react-chartjs-2';
+import { FaBoxes, FaUser } from 'react-icons/fa';
+import { HiOutlineStatusOnline } from 'react-icons/hi';
+import { useFormatNumber } from '../../hooks/ConvertValues';
+import { getAllProdutos, getAllUsuarios } from '../../service/api';
 
 ChartJS.register(
   ArcElement,
@@ -27,123 +40,164 @@ ChartJS.register(
 );
 
 export const DashBoard = () => {
-  // Dados simulados para os gráficos
-  const totalStockData = {
-    labels: ['Produto A', 'Produto B', 'Produto C', 'Produto D'],
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('xl'));
+
+  const { formatNumber } = useFormatNumber();
+
+  const { data: produtosData } = useQuery({
+    queryKey: ['produtos'],
+    queryFn: () => getAllProdutos(null, 1),
+  });
+  const { data: usuariosData } = useQuery({
+    queryKey: ['usuarios'],
+    queryFn: () => getAllUsuarios(null, 1),
+  });
+
+  const totalUsersOffline = usuariosData
+    ? usuariosData.totalUsers - usuariosData.totalUsersOnline
+    : 0;
+
+  const totalOnlineData = {
+    labels: ['Online', 'Offline'],
     datasets: [
       {
-        label: 'Quantidade em Estoque',
-        data: [50, 30, 20, 10],
-        backgroundColor: ['#3f51b5', '#f50057', '#ff9800', '#4caf50'],
-        borderWidth: 1,
+        label: 'Qnt de Usuários',
+        data: [usuariosData?.totalUsersOnline, totalUsersOffline],
+        backgroundColor: ['#44b700', '#999999'],
+        hoverOffset: 4,
       },
     ],
   };
 
   const totalClientsData = {
-    labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril'],
+    labels: usuariosData?.estatisticas.map((item) => `${item.month}/${item.year}`),
     datasets: [
       {
-        label: 'Total de Clientes',
-        data: [10, 150, 3000, 5000],
+        label: 'Total de Clientes cadastrados',
+        data: usuariosData?.estatisticas.map((item) => item.count),
         borderColor: '#3f51b5',
         backgroundColor: 'rgba(63, 81, 181, 0.2)',
-        borderWidth: 2,
-        pointRadius: 4,
+        tension: 0.1,
+        fill: false,
         pointBackgroundColor: '#3f51b5',
       },
     ],
   };
 
-  const topProductsData = {
-    labels: ['Produto A', 'Produto B', 'Produto C', 'Produto D'],
-    datasets: [
-      {
-        label: 'Quantidade Vendida',
-        data: [300, 250, 400, 150],
-        backgroundColor: ['#4caf50', '#f50057', '#ff9800', '#3f51b5'],
-      },
-    ],
-  };
-
   return (
-    <>
-      {[1, 2, 3, 4].map((item) => (
-        <Box
-          key={item}
-          sx={{
-            width: 300,
-            height: 150,
-            bgcolor: 'primary.main',
-            color: 'white',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: 2,
-          }}>
-          Card {item}
-        </Box>
-      ))}
-      <Grid2
+    <Box sx={{ width: '100%', paddingRight: 5 }}>
+      <Grid
         container
-        spacing={10}
-        sx={{ display: 'flex', justifyContent: 'center' }}>
-        {/* Gráfico de Estoques */}
-        <Grid2
+        justifyContent="space-between">
+        <Grid
           item
           xs={12}
-          md={6}>
-          <Card sx={{ width: 450, height: 600 }}>
+          sm={6}
+          md={3}>
+          <Card sx={{ boxShadow: 'none', background: '#cfcfcf' }}>
             <CardContent>
               <Typography
+                sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
                 variant="h6"
                 gutterBottom>
-                Totais de Estoques
+                <FaBoxes style={{ fontSize: 25 }} />
+                Total de Produtos
               </Typography>
-              <Doughnut data={totalStockData} />
+              <Typography variant="h4">{formatNumber(produtosData?.totalProducts || 0)}</Typography>
             </CardContent>
           </Card>
-        </Grid2>
+        </Grid>
 
-        {/* Gráfico de Produtos Mais Vendidos */}
-        <Grid2
-          item
-          xs={12}>
-          <Card sx={{ width: 450, height: 600 }}>
-            <CardContent>
-              <Typography
-                variant="h6"
-                gutterBottom>
-                Produtos Mais Vendidos
-              </Typography>
-              <Bar
-                data={topProductsData}
-                options={{
-                  indexAxis: 'y', // Transforma o gráfico em barras horizontais
-                  responsive: true,
-                }}
-              />
-            </CardContent>
-          </Card>
-        </Grid2>
-
-        {/* Gráfico de Clientes */}
-        <Grid2
+        <Grid
           item
           xs={12}
-          md={6}>
-          <Card sx={{ width: 450, height: 300 }}>
+          sm={6}
+          md={3}>
+          <Card sx={{ boxShadow: 'none', background: '#cfcfcf' }}>
             <CardContent>
               <Typography
+                sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
                 variant="h6"
                 gutterBottom>
-                Totais de Clientes
+                <FaUser style={{ fontSize: 25 }} />
+                Total de Usuários
               </Typography>
-              <Line data={totalClientsData} />
+              <Typography variant="h4">{formatNumber(usuariosData?.totalUsers || 0)}</Typography>
             </CardContent>
           </Card>
-        </Grid2>
-      </Grid2>
-    </>
+        </Grid>
+
+        <Grid
+          item
+          xs={12}
+          sm={6}
+          md={3}>
+          <Card sx={{ boxShadow: 'none', background: '#cfcfcf' }}>
+            <CardContent>
+              <Typography
+                sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                variant="h6"
+                gutterBottom>
+                <HiOutlineStatusOnline style={{ fontSize: 30 }} />
+                Usuarios Online
+              </Typography>
+              <Typography variant="h4">
+                {formatNumber(usuariosData?.totalUsersOnline || 0)}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
+      <Box sx={{ mt: 4, width: '100%' }}>
+        <Grid
+          container
+          spacing={2}>
+          <Grid
+            item
+            xs={12}
+            md={6}>
+            <Card
+              sx={{
+                width: isSmallScreen ? 300 : 400,
+                height: isSmallScreen ? 450 : 550,
+                boxShadow: 'none',
+              }}>
+              <CardContent>
+                <Typography
+                  variant="h6"
+                  gutterBottom>
+                  Status Online
+                </Typography>
+                {totalOnlineData ? <Doughnut data={totalOnlineData} /> : <CircularProgress />}
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid
+            item
+            xs={12}
+            md={6}>
+            <Card
+              sx={{
+                width: isSmallScreen ? 500 : 800,
+                height: isSmallScreen ? 400 : 450,
+
+                boxShadow: 'none',
+              }}>
+              <CardContent>
+                <Typography
+                  variant="h6"
+                  gutterBottom>
+                  Clientes Cadastrados
+                </Typography>
+                {totalClientsData ? <Line data={totalClientsData} /> : <CircularProgress />}
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      </Box>
+    </Box>
   );
 };

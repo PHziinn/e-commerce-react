@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect, useContext } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { axiosClient } from '../service/api.js';
 import { Box, CircularProgress } from '@mui/material';
@@ -116,3 +116,5 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+export const useUser = () => useContext(AuthContext);

@@ -48,6 +48,11 @@ export async function getAllUsuarios(name, page) {
 
   return response.data;
 }
+export async function getByUsuario(id) {
+  const response = await axiosClient.get(`/usuarios/${id}`);
+
+  return response.data;
+}
 export async function patchUsuarios(id, updatedUsuario) {
   const response = await axiosClient.patch(`/usuarios/${id}`, updatedUsuario);
 
