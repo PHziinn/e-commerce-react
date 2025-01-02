@@ -1,29 +1,27 @@
-import { useContext, useEffect, useState } from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { AuthContext } from '../../../context/authContext';
-import { useNavigate } from 'react-router-dom';
-import { MdOutlineVisibility, MdOutlineVisibilityOff, MdAccountCircle } from 'react-icons/md';
-import { FcGoogle } from 'react-icons/fc';
 import {
   Avatar,
-  Button,
-  CssBaseline,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Link,
-  Grid,
   Box,
-  Typography,
+  Button,
+  Checkbox,
+  CircularProgress,
   Container,
+  CssBaseline,
+  Divider,
+  FormControlLabel,
+  Grid,
   IconButton,
   InputAdornment,
-  CircularProgress,
-  Divider,
-  Alert,
+  Link,
+  TextField,
+  Typography,
 } from '@mui/material';
-import { useAlert } from '../../../hooks/ShowAlert';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useContext, useEffect, useState } from 'react';
+import { MdAccountCircle, MdOutlineVisibility, MdOutlineVisibilityOff } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
 import { AlertNotification } from '../../../components/AlertNotification';
+import { AuthContext } from '../../../context/authContext';
+import { useAlert } from '../../../hooks/ShowAlert';
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -82,15 +80,6 @@ export const Login = () => {
               flexDirection: 'column',
               alignItems: 'center',
             }}>
-            <Avatar sx={{ m: 1, bgcolor: 'black', width: 60, height: 60, fontSize: 50 }}>
-              <MdAccountCircle />
-            </Avatar>
-            <Typography
-              sx={{ textTransform: 'uppercase', fontWeight: '600' }}
-              component="h1"
-              variant="h5">
-              Login
-            </Typography>
             <Box
               component="form"
               onSubmit={handleSubmit}
@@ -100,8 +89,26 @@ export const Login = () => {
                 p: 3,
                 borderRadius: 2,
                 boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.3)',
-                backgroundColor: 'background.paper',
               }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  mb: 5,
+                }}>
+                <Avatar sx={{ m: 1, bgcolor: 'black', width: 60, height: 60, fontSize: 50 }}>
+                  <MdAccountCircle />
+                </Avatar>
+                <Typography
+                  sx={{ textTransform: 'uppercase', fontWeight: '600' }}
+                  component="h1"
+                  variant="h5">
+                  Login
+                </Typography>
+              </Box>
+
               <TextField
                 margin="normal"
                 required
@@ -175,17 +182,18 @@ export const Login = () => {
                 type="submit"
                 fullWidth
                 variant="contained"
+                disabled={loading}
                 sx={{
                   mt: 3,
                   mb: 2,
-                  bgcolor: '#000',
+                  background: '#000000',
                   transition: 'background-color 0.3s',
-                  ':hover': { bgcolor: '#a9a9a9', color: 'black' },
+                  ':hover': { backgroundColor: '#282828', color: '#fff', boxShadow: 'none' },
                 }}>
                 {loading ? (
                   <CircularProgress
                     sx={{
-                      color: 'white',
+                      color: '#000000',
                     }}
                     size={24}
                   />

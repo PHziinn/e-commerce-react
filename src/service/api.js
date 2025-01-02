@@ -43,6 +43,11 @@ export async function getFiltersPrice(maxPrice, minPrice) {
 }
 
 // Usuarios
+export async function createUsuario(createUsuario) {
+  const response = await axiosClient.post(`/cadastro`, createUsuario);
+
+  return response.data;
+}
 export async function getAllUsuarios(name, page) {
   const response = await axiosClient.get(`/usuarios?page=${page}`);
 
