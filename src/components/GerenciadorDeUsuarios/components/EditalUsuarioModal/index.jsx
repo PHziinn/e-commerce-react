@@ -10,6 +10,7 @@ import {
   DialogTitle,
   Divider,
   IconButton,
+  MenuItem,
   Stack,
   TextField,
   Typography,
@@ -19,6 +20,8 @@ import { MdClose, MdDelete } from 'react-icons/md';
 
 export const EditUsuarioModal = ({ open, onClose, usuario, onSave }) => {
   const [formData, setFormData] = useState(usuario);
+
+  const isBlocked = ['false', 'true'];
 
   useEffect(() => {
     setFormData(usuario);
@@ -160,6 +163,22 @@ export const EditUsuarioModal = ({ open, onClose, usuario, onSave }) => {
             value={formData?.email || ''}
             onChange={handleChange}
           />
+          <TextField
+            label="Banimento"
+            variant="outlined"
+            fullWidth
+            name="isBanned"
+            value={formData?.isBanned || ''}
+            onChange={handleChange}
+            select>
+            {isBlocked.map((block) => (
+              <MenuItem
+                key={block}
+                value={block}>
+                {block}
+              </MenuItem>
+            ))}
+          </TextField>
         </Stack>
       </DialogContent>
       <Divider />

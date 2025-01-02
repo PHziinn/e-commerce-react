@@ -21,11 +21,11 @@ import { ConfirmDelete } from '../../../ConfirmDelete';
 import { EditUsuarioModal } from '../EditalUsuarioModal';
 
 const StyledBadge = styled(Badge, {
-  shouldForwardProp: (prop) => prop !== 'isOnline',
-})(({ theme, isOnline }) => ({
+  shouldForwardProp: (prop) => prop !== 'isOnline' && prop !== 'isBanned',
+})(({ theme, isOnline, isBanned }) => ({
   '& .MuiBadge-badge': {
-    backgroundColor: isOnline ? '#44b700' : '#999999',
-    color: isOnline ? '#44b700' : '#999999',
+    backgroundColor: isBanned ? '#FF0000' : isOnline ? '#44b700' : '#999999',
+    color: isBanned ? '#FF0000' : isOnline ? '#44b700' : '#999999',
     boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
     '&::after': {
       position: 'absolute',
@@ -124,9 +124,16 @@ export const TabelaDeUsuarios = ({ data, isLoading, isError, onDelete, onEdit })
                       overlap="circular"
                       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                       variant="dot"
-                      isOnline={usuario.isOnline}>
+                      isOnline={usuario.isOnline}
+                      isBanned={usuario.isBanned}>
                       <Avatar
-                        sx={{ width: 55, height: 55, border: '1px solid rgb 0.0.0.0.1' }}
+                        sx={{
+                          width: 55,
+                          height: 55,
+                          border: '1px solid rgb(0,0,0,0.4)',
+                          filter: usuario.isBanned ? 'grayscale(100%)' : 'none',
+                          opacity: usuario.isBanned ? 0.5 : 1,
+                        }}
                         alt={usuario.name}
                         src={usuario.avatar}
                       />
