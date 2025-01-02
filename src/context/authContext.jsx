@@ -1,11 +1,15 @@
-import { createContext, useState, useEffect, useContext } from 'react';
-import { jwtDecode } from 'jwt-decode';
-import { axiosClient } from '../service/api.js';
 import { Box, CircularProgress } from '@mui/material';
+import { jwtDecode } from 'jwt-decode';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { AlertNotification } from '../components/AlertNotification/index.jsx';
+import { useAlert } from '../hooks/ShowAlert';
+import { axiosClient } from '../service/api.js';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const { alert, showAlert } = useAlert();
+
   const [token, setToken] = useState(localStorage.getItem('@Auth:token') || null);
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem('@Auth:user');
@@ -32,6 +36,12 @@ export const AuthProvider = ({ children }) => {
         console.warn('Token expirado');
         return false;
       }
+
+      if (decoded.isBanned) {
+        showAlert('Sua conta está banida. Contate o suporte.', 'info', 20, 9000);
+        return false;
+      }
+
       setUser(decoded);
       localStorage.setItem('@Auth:user', JSON.stringify(decoded));
       return true;
@@ -61,22 +71,26 @@ export const AuthProvider = ({ children }) => {
   const signIn = async ({ email, password }) => {
     try {
       const response = await axiosClient.post('/login', { email, password });
+
+      if (response.status === 200) {
+        showAlert('Login realizado com sucesso.', 'success', 70, 10000);
+      }
+
       if (response.data.error) {
-        alert(response.data.error);
+        console.error(response.data.error);
       } else {
-        const accessToken = response.data.access_token;
+        const accessToken = response.data.access_token || response.data.token;
 
         if (isValidToken(accessToken)) {
           setToken(accessToken);
           axiosClient.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
           localStorage.setItem('@Auth:token', accessToken);
         } else {
-          alert('Token inválido ou expirado.');
           signOut();
         }
       }
     } catch (error) {
-      console.error('Erro ao fazer login:', error);
+      showAlert('Email ou Senha incorreto.', 'error', 20);
     }
   };
 
@@ -112,6 +126,7 @@ export const AuthProvider = ({ children }) => {
         signOut,
         signed,
       }}>
+      <AlertNotification alert={alert} />
       {children}
     </AuthContext.Provider>
   );

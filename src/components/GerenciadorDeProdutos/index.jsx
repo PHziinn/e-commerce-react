@@ -1,4 +1,4 @@
-import { Alert, Box, Fab, Pagination } from '@mui/material';
+import { Box, Fab, Pagination } from '@mui/material';
 import InputBase from '@mui/material/InputBase';
 import { styled } from '@mui/material/styles';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { MdAddShoppingCart, MdOutlineManageSearch } from 'react-icons/md';
 import { useAlert } from '../../hooks/ShowAlert';
 import { deleteProdutos, getAllProdutos, patchProdutos, postProdutos } from '../../service/api';
+import { AlertNotification } from '../AlertNotification';
 import { AddProdutosModal } from './components/AdicionarProdutos';
 import { TabelaDeProdutos } from './components/TabelaDeProdutos';
 
@@ -59,7 +60,7 @@ export const GerenciadorDeProdutos = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
-  const { alert, showAlert, setAlert } = useAlert();
+  const { alert, showAlert } = useAlert();
   const client = useQueryClient();
 
   const { data, isLoading, isError } = useQuery({
@@ -144,15 +145,7 @@ export const GerenciadorDeProdutos = () => {
 
   return (
     <Box sx={{ p: 3, width: '100%' }}>
-      {alert.open && (
-        <Box sx={{ position: 'fixed', top: '70px', right: '20px', zIndex: 9999 }}>
-          <Alert
-            severity={alert.severity}
-            onClose={() => setAlert({ open: false, message: '', severity: 'success' })}>
-            {alert.message}
-          </Alert>
-        </Box>
-      )}
+      <AlertNotification alert={alert} />
       <Box
         display="flex"
         justifyContent="space-between"

@@ -1,4 +1,4 @@
-import { Alert, Box, Pagination } from '@mui/material';
+import { Box, Pagination } from '@mui/material';
 import InputBase from '@mui/material/InputBase';
 import { styled } from '@mui/material/styles';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { PiUserList } from 'react-icons/pi';
 import { useAlert } from '../../hooks/ShowAlert';
 import { deleteUsuarios, getAllUsuarios, patchUsuarios } from '../../service/api';
+import { AlertNotification } from '../AlertNotification';
 import { TabelaDeUsuarios } from './components/TabelaDeUsuarios';
 
 const Search = styled('div')(({ theme }) => ({
@@ -57,7 +58,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export const GerenciadorDeUsuarios = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
-  const { alert, showAlert, setAlert } = useAlert();
+  const { alert, showAlert } = useAlert();
   const client = useQueryClient();
 
   const { data, isLoading, isError } = useQuery({
@@ -117,15 +118,7 @@ export const GerenciadorDeUsuarios = () => {
 
   return (
     <Box sx={{ p: 3, width: '100%' }}>
-      {alert.open && (
-        <Box sx={{ position: 'fixed', top: '70px', right: '20px', zIndex: 9999 }}>
-          <Alert
-            severity={alert.severity}
-            onClose={() => setAlert({ open: false, message: '', severity: 'success' })}>
-            {alert.message}
-          </Alert>
-        </Box>
-      )}
+      <AlertNotification alert={alert} />
 
       <Box
         display="flex"

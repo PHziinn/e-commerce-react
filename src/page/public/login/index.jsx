@@ -20,7 +20,10 @@ import {
   InputAdornment,
   CircularProgress,
   Divider,
+  Alert,
 } from '@mui/material';
+import { useAlert } from '../../../hooks/ShowAlert';
+import { AlertNotification } from '../../../components/AlertNotification';
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -29,6 +32,7 @@ export const Login = () => {
   const [password, setPassword] = useState('');
 
   const { signIn, user } = useContext(AuthContext);
+  const { alert } = useAlert();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -63,6 +67,7 @@ export const Login = () => {
         component="main"
         maxWidth="xs">
         <CssBaseline />
+        <AlertNotification alert={alert} />
         <Box
           sx={{
             minHeight: '100vh',
@@ -188,18 +193,8 @@ export const Login = () => {
                   'Entrar'
                 )}
               </Button>
-              <Divider>
-                <Typography sx={{ color: 'text.secondary' }}>ou</Typography>
-              </Divider>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  onClick={() => alert('Inscreva-se no Google')}
-                  startIcon={<FcGoogle />}>
-                  Inscreva-se no Google
-                </Button>
-
+              <Divider />
+              <Box sx={{ display: 'flex', flexDirection: 'column', mt: 2 }}>
                 <Typography sx={{ textAlign: 'center' }}>
                   Não tem uma conta?
                   <Link
