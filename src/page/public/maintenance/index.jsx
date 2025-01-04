@@ -1,8 +1,10 @@
-import { Box, LinearProgress, Stack, Typography } from '@mui/material';
+import { Box, LinearProgress, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { FcServices } from 'react-icons/fc';
 import { FooterMaintenance } from './components/FooterMaintenance';
 
 export const MaintenancePage = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   return (
     <Box component="main">
       <Box
@@ -11,7 +13,7 @@ export const MaintenancePage = () => {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          height: '100vh',
+          height: '100dvh',
           textAlign: 'center',
           fontFamily: 'Arial',
         }}>
@@ -39,7 +41,7 @@ export const MaintenancePage = () => {
         </Typography>
 
         <Stack
-          sx={{ width: '500px', mb: 3 }}
+          sx={{ width: isMobile ? '300px' : '400px', mb: 3 }}
           spacing={2}>
           <LinearProgress color="inherit" />
         </Stack>

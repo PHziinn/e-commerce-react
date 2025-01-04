@@ -17,7 +17,6 @@ export const FooterMaintenance = () => {
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingLeft: '20px',
-        paddingRight: '20px',
       }}>
       <Box
         component="img"
@@ -26,7 +25,7 @@ export const FooterMaintenance = () => {
         sx={{ width: '200px' }}
       />
 
-      <Box sx={{ display: 'flex', gap: 2, mr: 3 }}>
+      <Box sx={{ display: 'flex', gap: 2, mr: 5 }}>
         <IconButton
           href="https://linkedin.com"
           target="_blank"
