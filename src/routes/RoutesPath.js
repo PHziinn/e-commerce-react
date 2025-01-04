@@ -23,6 +23,7 @@ export const AdminRoutesPath = {
 
 export const MaintenancePath = {
   '/*': MaintenancePage,
+  '/login': Login,
 };
 
 export const PrivateRoutesPath = {
