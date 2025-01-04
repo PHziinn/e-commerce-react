@@ -52,8 +52,12 @@ export const Login = () => {
   };
 
   useEffect(() => {
-    if (user) {
+    if (user?.role === 'USER') {
       navigate('/');
+    }
+
+    if (user?.role === 'ADMIN') {
+      navigate('/admin/dashboard');
     }
   }, [user, navigate]);
 
