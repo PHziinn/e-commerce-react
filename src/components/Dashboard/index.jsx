@@ -22,8 +22,7 @@ import {
   Tooltip,
 } from 'chart.js';
 import { Doughnut, Line } from 'react-chartjs-2';
-import { FaBoxes, FaUser } from 'react-icons/fa';
-import { HiOutlineStatusOnline } from 'react-icons/hi';
+import { FaBoxes, FaUsers, FaUsersSlash } from 'react-icons/fa';
 import { useFormatNumber } from '../../hooks/ConvertValues';
 import { getAllProdutos, getAllUsuarios } from '../../service/api';
 
@@ -120,7 +119,7 @@ export const DashBoard = () => {
                 sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
                 variant="h6"
                 gutterBottom>
-                <FaUser style={{ fontSize: 25 }} />
+                <FaUsers style={{ fontSize: 25 }} />
                 Total de Usuários
               </Typography>
               <Typography variant="h4">{formatNumber(usuariosData?.totalUsers || 0)}</Typography>
@@ -139,11 +138,11 @@ export const DashBoard = () => {
                 sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
                 variant="h6"
                 gutterBottom>
-                <HiOutlineStatusOnline style={{ fontSize: 30 }} />
-                Usuarios Online
+                <FaUsersSlash style={{ fontSize: 25 }} />
+                Usuarios Banidos
               </Typography>
               <Typography variant="h4">
-                {formatNumber(usuariosData?.totalUsersOnline || 0)}
+                {formatNumber(usuariosData?.totalUsersBanned || 0)}
               </Typography>
             </CardContent>
           </Card>
