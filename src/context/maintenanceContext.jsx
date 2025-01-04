@@ -1,10 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
-import { createContext, useState, useEffect } from 'react';
-import { getAllSettings } from '../service/api';
-import { io } from 'socket.io-client';
 import { Box, CircularProgress } from '@mui/material';
-import { useAlert } from '../hooks/ShowAlert';
+import { useQuery } from '@tanstack/react-query';
+import { createContext, useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
 import { AlertNotification } from '../components/AlertNotification';
+import { useAlert } from '../hooks/ShowAlert';
+import { getAllSettings } from '../service/api';
 
 export const MaintenanceContext = createContext();
 
@@ -41,7 +41,6 @@ export const MaintenanceProvider = ({ children }) => {
         showAlert('Estamos em Manuntenção Voltaremos em Breve!', 'info', 20, 15000);
       }
 
-      console.log();
       if (updatedSettings && updatedSettings.isManutencion !== undefined) {
         setIsMaintenanceMode(updatedSettings.isManutencion);
       }

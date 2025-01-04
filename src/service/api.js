@@ -68,3 +68,15 @@ export async function deleteUsuarios(id) {
 
   return response.data;
 }
+
+// Settings
+export async function getAllSettings() {
+  const response = await axiosClient.get(`/settings`);
+
+  return response.data;
+}
+export async function patchSettings(id, updatedSettings) {
+  const response = await axiosClient.patch(`/settings/${id}`, updatedSettings);
+
+  return response.data;
+}
