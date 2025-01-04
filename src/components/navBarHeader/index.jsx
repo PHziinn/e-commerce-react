@@ -8,17 +8,70 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 import { MdAccountCircle, MdOutlineShoppingCart } from 'react-icons/md';
+import { io } from 'socket.io-client';
 import TechDev from '../../../public/logoWhite.svg';
+import { getAllSettings } from '../../service/api';
 import { SearchResult } from '../Search';
 import { CarrinhdoDeCompras } from './components/carrinhoDeCompras';
-import { FeedDesconto } from './components/feedDesconto';
+import { FeedAnuncio } from './components/FeedAnuncio';
 
-export const PrimarySearchBar = ({ showAppBar = true }) => {
+export const PrimarySearchBar = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [cartOpen, setCartOpen] = useState(false);
+  const [messageSocket, setMessageSocket] = useState();
+  const [isFeedAnuncio, setIsFeedAnuncio] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+
+  const { data } = useQuery({
+    queryKey: ['settings'],
+    queryFn: getAllSettings,
+    keepPreviousData: true,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+  });
+
+  useEffect(() => {
+    if (data && Array.isArray(data) && data[0]?.hasOwnProperty('isFeedDesconto', 'message')) {
+      const isFeedDesconto = data[0].isFeedDesconto;
+      const message = data[0].message;
+      setIsFeedAnuncio(isFeedDesconto);
+      setMessageSocket(message);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    const serverUrls = import.meta.env.VITE_SOCKET_SERVER_URLS.split(',');
+    const serverUrl =
+      serverUrls.find((url) => url.includes(window.location.hostname)) || serverUrls[0];
+
+    const socketInstance = io(serverUrl);
+
+    socketInstance.on('settingsUpdated', (updatedSettings) => {
+      setIsFeedAnuncio(updatedSettings.isFeedDesconto);
+      setMessageSocket(updatedSettings.message);
+    });
+
+    return () => {
+      socketInstance.off('settingsUpdated');
+      socketInstance.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   return (
     <>
@@ -111,13 +164,16 @@ export const PrimarySearchBar = ({ showAppBar = true }) => {
           display: isMobile ? 'flex' : 'none',
           alignItems: 'center',
           justifyContent: 'center',
-          zIndex: 999,
+          zIndex: 9999,
         }}>
         <Box sx={{ width: '90%' }}>
           <SearchResult />
         </Box>
       </AppBar>
-      <FeedDesconto showAppBar={showAppBar} />
+      <FeedAnuncio
+        isFeedAnuncio={isFeedAnuncio && scrollY < 100}
+        message={messageSocket}
+      />
     </>
   );
 };
