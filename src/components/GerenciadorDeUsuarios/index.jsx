@@ -58,7 +58,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export const GerenciadorDeUsuarios = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
-  const { alert, showAlert } = useAlert();
+  const { alert, closeAlert, showAlert } = useAlert();
   const client = useQueryClient();
 
   const { data, isLoading, isError } = useQuery({
@@ -118,7 +118,10 @@ export const GerenciadorDeUsuarios = () => {
 
   return (
     <Box sx={{ p: 3, width: '100%' }}>
-      <AlertNotification alert={alert} />
+      <AlertNotification
+        closeAlert={closeAlert}
+        alert={alert}
+      />
 
       <Box
         display="flex"

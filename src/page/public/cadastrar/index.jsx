@@ -25,7 +25,7 @@ import { createUsuario } from '../../../service/api';
 export const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const client = useQueryClient();
-  const { alert, showAlert } = useAlert();
+  const { alert, closeAlert, showAlert } = useAlert();
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
 
@@ -70,7 +70,10 @@ export const SignUp = () => {
         component="main"
         maxWidth="xs">
         <CssBaseline />
-        <AlertNotification alert={alert} />
+        <AlertNotification
+          closeAlert={closeAlert}
+          alert={alert}
+        />
         <Box
           sx={{
             minHeight: '100vh',

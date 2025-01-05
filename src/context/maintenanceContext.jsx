@@ -11,7 +11,7 @@ export const MaintenanceContext = createContext();
 export const MaintenanceProvider = ({ children }) => {
   const [isMaintenanceMode, setIsMaintenanceMode] = useState(false);
   const [socket, setSocket] = useState(null);
-  const { alert, showAlert } = useAlert();
+  const { alert, showAlert, closeAlert } = useAlert();
 
   const { data, isLoading } = useQuery({
     queryKey: ['settings'],
@@ -62,7 +62,10 @@ export const MaintenanceProvider = ({ children }) => {
 
   return (
     <MaintenanceContext.Provider value={{ isMaintenanceMode, toggleMaintenanceMode }}>
-      <AlertNotification alert={alert} />
+      <AlertNotification
+        closeAlert={closeAlert}
+        alert={alert}
+      />
 
       {isLoading ? (
         <Box

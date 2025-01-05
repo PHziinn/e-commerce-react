@@ -1,9 +1,6 @@
 import { Box, Alert as MuiAlert, Slide } from '@mui/material';
-import { useAlert } from '../../hooks/ShowAlert';
 
-export const AlertNotification = ({ alert }) => {
-  const { setAlert } = useAlert();
-
+export const AlertNotification = ({ alert, closeAlert }) => {
   return (
     <Box
       sx={{
@@ -23,7 +20,7 @@ export const AlertNotification = ({ alert }) => {
         unmountOnExit>
         <MuiAlert
           severity={alert.severity}
-          onClose={() => setAlert({ open: false, message: '', severity: 'success' })}>
+          onClose={() => closeAlert({ open: false, message: '', severity: 'success', top: 70 })}>
           {alert.message}
         </MuiAlert>
       </Slide>

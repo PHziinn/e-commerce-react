@@ -17,7 +17,7 @@ import { getAllSettings, patchSettings } from '../../../service/api';
 
 export const AdminSettings = () => {
   const [feedMessage, setFeedMessage] = useState();
-  const { alert, showAlert } = useAlert();
+  const { alert, closeAlert, showAlert } = useAlert();
   const client = useQueryClient();
 
   const { data, isLoading } = useQuery({
@@ -72,7 +72,10 @@ export const AdminSettings = () => {
       <Box
         component="main"
         sx={{ flexGrow: 1, p: 3, bgcolor: 'background.default' }}>
-        <AlertNotification alert={alert} />
+        <AlertNotification
+          closeAlert={closeAlert}
+          alert={alert}
+        />
         <Toolbar />
         <Typography
           variant="h4"

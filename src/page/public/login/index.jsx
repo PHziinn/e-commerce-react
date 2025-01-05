@@ -30,7 +30,8 @@ export const Login = () => {
   const [password, setPassword] = useState('');
 
   const { signIn, user } = useContext(AuthContext);
-  const { alert } = useAlert();
+  const { alert, closeAlert } = useAlert();
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -69,7 +70,11 @@ export const Login = () => {
         component="main"
         maxWidth="xs">
         <CssBaseline />
-        <AlertNotification alert={alert} />
+        <AlertNotification
+          closeAlert={closeAlert}
+          alert={alert}
+        />
+
         <Box
           sx={{
             minHeight: '100vh',

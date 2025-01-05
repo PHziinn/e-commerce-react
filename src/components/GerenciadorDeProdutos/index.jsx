@@ -60,7 +60,7 @@ export const GerenciadorDeProdutos = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
-  const { alert, showAlert } = useAlert();
+  const { alert, closeAlert, showAlert } = useAlert();
   const client = useQueryClient();
 
   const { data, isLoading, isError } = useQuery({
@@ -145,7 +145,10 @@ export const GerenciadorDeProdutos = () => {
 
   return (
     <Box sx={{ p: 3, width: '100%' }}>
-      <AlertNotification alert={alert} />
+      <AlertNotification
+        closeAlert={closeAlert}
+        alert={alert}
+      />
       <Box
         display="flex"
         justifyContent="space-between"

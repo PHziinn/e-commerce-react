@@ -8,7 +8,7 @@ import { axiosClient } from '../service/api.js';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const { alert, showAlert } = useAlert();
+  const { alert, closeAlert, showAlert } = useAlert();
 
   const [token, setToken] = useState(localStorage.getItem('@Auth:token') || null);
   const [user, setUser] = useState(() => {
@@ -126,7 +126,11 @@ export const AuthProvider = ({ children }) => {
         signOut,
         signed,
       }}>
-      <AlertNotification alert={alert} />
+      <AlertNotification
+        closeAlert={closeAlert}
+        alert={alert}
+      />
+
       {children}
     </AuthContext.Provider>
   );
