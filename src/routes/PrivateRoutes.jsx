@@ -8,13 +8,24 @@ export const PrivateRoute = ({ requiredRole }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const restrictedRoutesForMobile = [
+    '/admin/dashboard',
+    '/admin/usuarios',
+    '/admin/produtos',
+    '/admin/settings',
+  ];
+
   const role = user?.role || null;
 
   if (!signed) {
     return <Navigate to="/" />;
   }
 
-  if (role === 'ADMIN' && isMobile) {
+  if (
+    requiredRole?.includes('ADMIN') &&
+    isMobile &&
+    restrictedRoutesForMobile.includes(location.pathname)
+  ) {
     return (
       <Navigate
         to="/restricted"
