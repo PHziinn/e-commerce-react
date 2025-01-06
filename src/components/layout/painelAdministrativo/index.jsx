@@ -13,6 +13,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
+import { FaHome } from 'react-icons/fa';
 import {
   MdFormatListBulletedAdd,
   MdGridView,
@@ -20,6 +21,7 @@ import {
   MdPeople,
   MdSettings,
 } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../../context/authContext';
 import { getByUsuario } from '../../../service/api';
 
@@ -40,6 +42,7 @@ const menuItems = [
 ];
 
 export const PainelAdministrativo = ({ children }) => {
+  const navigate = useNavigate();
   const { user, signOut } = useUser();
 
   const { data, isLoading } = useQuery({
@@ -67,6 +70,11 @@ export const PainelAdministrativo = ({ children }) => {
             Administração
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <ListItemIcon
+              sx={{ cursor: 'pointer' }}
+              onClick={() => navigate('/')}>
+              <FaHome style={{ color: '#fff', fontSize: '25px' }} />
+            </ListItemIcon>
             <Typography variant="p">{data?.user?.name}</Typography>
 
             {isLoading ? (

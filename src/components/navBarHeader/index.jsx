@@ -113,6 +113,7 @@ export const PrimarySearchBar = () => {
                 component={'img'}
                 src={TechDev}
                 alt={TechDev}
+                onClick={() => navigate(`/`)}
                 sx={{
                   mb: isMobile ? 2 : null,
                   width: isMobile ? '150px' : '200px',
@@ -144,11 +145,13 @@ export const PrimarySearchBar = () => {
                         alt={userData?.user?.name || 'Avatar'}
                         src={userData?.user?.avatar || '/placeholder.svg'}
                         sx={{
+                          cursor: 'pointer',
                           border: '2px solid rgba(204, 204, 204, 0.2)',
                           boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
                           width: 45,
                           height: 45,
                         }}
+                        onClick={() => navigate(`/perfil`)}
                       />
                       {!isMobile && (
                         <Typography
