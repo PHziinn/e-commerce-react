@@ -15,7 +15,7 @@ export const FeedAnuncio = ({ isFeedAnuncio, message }) => {
             top: isMobile ? 136 : 66,
             left: 0,
             width: '100%',
-            zIndex: 9999,
+            zIndex: 999,
           }}>
           <Alert
             severity="info"

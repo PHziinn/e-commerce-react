@@ -1,9 +1,9 @@
-import { IoIosSearch } from 'react-icons/io';
 import InputBase from '@mui/material/InputBase';
 import { styled } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
-import { useCallback, useState } from 'react';
 import { debounce } from 'lodash';
+import { useCallback, useState } from 'react';
+import { IoIosSearch } from 'react-icons/io';
+import { useNavigate } from 'react-router-dom';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -11,6 +11,7 @@ const Search = styled('div')(({ theme }) => ({
   backgroundColor: '#F8F8FF',
   marginRight: theme.spacing(2),
   width: '100%',
+  border: '1px solid rgba(0, 0, 0, 0.2)',
   [theme.breakpoints.up('sm')]: {
     width: '450px',
     height: '40px',
@@ -45,7 +46,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     width: '100%',
     borderRadius: '5px solid',
     [theme.breakpoints.up('md')]: {
-      width: '20ch',
+      width: '43ch',
     },
   },
 }));

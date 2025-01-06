@@ -1,5 +1,5 @@
 import { Box, Button, Divider, List, ListItem, ListItemAvatar, Typography } from '@mui/material';
-import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
+import { AiOutlineDelete, AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 
 export const CarrinhdoDeCompras = ({ cartOpen }) => {
   const cartItems = [
@@ -33,18 +33,18 @@ export const CarrinhdoDeCompras = ({ cartOpen }) => {
             position: 'absolute',
             top: '60px',
             right: 0,
-            width: 350,
-            maxHeight: 400,
+            width: 370,
+            maxHeight: 450,
             background: 'white',
             border: '1px solid #e0e0e0',
             boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
             borderRadius: '8px',
-            zIndex: 10,
+            zIndex: 999,
             overflow: 'hidden',
           }}>
           <Box
             sx={{
-              maxHeight: 300,
+              maxHeight: 350,
               overflowY: 'auto',
               padding: 2,
             }}>
@@ -59,8 +59,8 @@ export const CarrinhdoDeCompras = ({ cartOpen }) => {
                         alt={item.name}
                         sx={{
                           borderRadius: 2,
-                          width: 80,
-                          height: 60,
+                          width: 85,
+                          height: 65,
                           objectFit: 'contain',
                         }}
                       />
@@ -72,7 +72,22 @@ export const CarrinhdoDeCompras = ({ cartOpen }) => {
                         flexDirection: 'column',
                         flexGrow: 1,
                       }}>
-                      <Typography sx={{ fontSize: '14px' }}>{item.name}</Typography>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'end',
+                          gap: 1,
+                        }}>
+                        <AiOutlineDelete
+                          style={{
+                            fontSize: '22px',
+                            cursor: 'pointer',
+                            color: 'red',
+                          }}
+                        />
+                        <Typography sx={{ fontSize: '14px' }}>{item.name}</Typography>
+                      </Box>
                       <Box
                         sx={{
                           display: 'flex',
@@ -88,21 +103,22 @@ export const CarrinhdoDeCompras = ({ cartOpen }) => {
                           }}>
                           <AiOutlineMinus
                             style={{
-                              fontSize: '20px',
+                              fontSize: '22px',
                               cursor: 'pointer',
                             }}
                           />
-                          <Typography sx={{ fontSize: '14px' }}>1</Typography>
+                          <Typography sx={{ fontSize: '15px' }}>10</Typography>
                           <AiOutlinePlus
                             style={{
-                              fontSize: '20px',
+                              fontSize: '22px',
                               cursor: 'pointer',
                             }}
                           />
                         </Box>
+
                         <Typography
                           sx={{
-                            fontSize: '14px',
+                            fontSize: '15px',
                             fontWeight: 'bold',
                           }}>
                           {`R$ ${item.price.toFixed(2)}`}
@@ -121,7 +137,7 @@ export const CarrinhdoDeCompras = ({ cartOpen }) => {
               borderTop: '1px solid #e0e0e0',
               background: '#f9f9f9',
             }}>
-            <Typography sx={{ mb: 1, fontSize: '16px', fontWeight: 'bold' }}>
+            <Typography sx={{ mb: 1, fontSize: '18px', fontWeight: 'bold' }}>
               Total: R$ {totalPrice.toFixed(2)}
             </Typography>
             <Button
@@ -134,8 +150,8 @@ export const CarrinhdoDeCompras = ({ cartOpen }) => {
                 borderRadius: 2,
                 transition: 'background-color 0.3s',
                 '&:hover': {
-                  backgroundColor: '#D3D3D3',
-                  color: 'black',
+                  backgroundColor: '#282828',
+                  color: 'white',
                   boxShadow: 'none',
                 },
               }}
