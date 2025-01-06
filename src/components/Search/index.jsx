@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import InputBase from '@mui/material/InputBase';
 import { styled } from '@mui/material/styles';
 import { debounce } from 'lodash';
@@ -76,17 +77,24 @@ export const SearchResult = () => {
   };
 
   return (
-    <Search sx={{ display: 'flex' }}>
-      <SearchIconWrapper>
-        <IoIosSearch style={{ fontSize: '1.6rem' }} />
-      </SearchIconWrapper>
-      <StyledInputBase
-        placeholder="Pesquisar produtos…"
-        inputProps={{ 'aria-label': 'search' }}
-        value={searchTerm}
-        onChange={handleChange}
-        onKeyDown={handleSearch}
-      />
-    </Search>
+    <Box
+      component={'form'}
+      autoComplete="off">
+      <Search sx={{ display: 'flex' }}>
+        <SearchIconWrapper>
+          <IoIosSearch style={{ fontSize: '1.6rem' }} />
+        </SearchIconWrapper>
+        <StyledInputBase
+          placeholder="Pesquisar produtos…"
+          inputProps={{
+            'aria-label': 'search',
+          }}
+          style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
+          value={searchTerm}
+          onChange={handleChange}
+          onKeyDown={handleSearch}
+        />
+      </Search>
+    </Box>
   );
 };
