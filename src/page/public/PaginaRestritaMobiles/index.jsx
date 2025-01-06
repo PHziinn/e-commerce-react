@@ -1,8 +1,15 @@
 import { Box, Button, Typography } from '@mui/material';
-
-import { MdOutlineMobileOff } from 'react-icons/md';
+import { FcLockPortrait } from 'react-icons/fc';
+import { Navigate, useLocation } from 'react-router-dom';
 
 export const PaginaRestritaMobiles = () => {
+  const location = useLocation();
+  const fromInternal = location.state?.from === 'internal';
+
+  if (!fromInternal) {
+    return <Navigate to="/" />;
+  }
+
   return (
     <Box component="main">
       <Box
@@ -16,7 +23,7 @@ export const PaginaRestritaMobiles = () => {
           fontFamily: 'Arial',
           color: '#b71c1c',
         }}>
-        <MdOutlineMobileOff size={150} />
+        <FcLockPortrait size={150} />
         <Typography sx={{ mt: 2, mb: 2, fontSize: '42px', fontWeight: 'bold' }}>
           Acesso Restrito
         </Typography>
@@ -29,15 +36,8 @@ export const PaginaRestritaMobiles = () => {
               lineHeight: 1.6,
               mb: 1,
             }}>
-            Infelizmente, este conteúdo não está disponível para dispositivos móveis.
-          </Typography>
-          <Typography
-            sx={{
-              color: '#555555',
-              fontWeight: 400,
-              lineHeight: 1.6,
-            }}>
-            Por favor, para uma melhor experiência, acesse esta página através de um desktop.
+            Infelizmente, este conteúdo não está disponível para dispositivos móveis. Por favor,
+            para uma melhor experiência, acesse esta página através de um desktop.
           </Typography>
           <Button
             variant="contained"

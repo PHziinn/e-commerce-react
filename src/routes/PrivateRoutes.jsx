@@ -15,11 +15,21 @@ export const PrivateRoute = ({ requiredRole }) => {
   }
 
   if (role === 'ADMIN' && isMobile) {
-    return <Navigate to="/restricted" />;
+    return (
+      <Navigate
+        to="/restricted"
+        state={{ from: 'internal' }}
+      />
+    );
   }
 
   if (requiredRole && !requiredRole.includes(role)) {
-    return <Navigate to="/unauthorized" />;
+    return (
+      <Navigate
+        to="/unauthorized"
+        state={{ from: 'internal' }}
+      />
+    );
   }
 
   return <Outlet />;

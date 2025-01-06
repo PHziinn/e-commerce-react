@@ -10,8 +10,8 @@ import { Login } from '../page/public/login';
 import { MaintenancePage } from '../page/public/maintenance';
 import { NotFound } from '../page/public/notFound';
 import { PaginaRestritaMobiles } from '../page/public/PaginaRestritaMobiles';
-import { PaymentFailed } from '../page/public/paymentFailed';
-import { PaymentSuccess } from '../page/public/paymentSuccess';
+import { FalhaPagamento } from '../page/public/FalhaPagamento';
+import { PagamentoConcluido } from '../page/public/PagamentoConcluido';
 import { SearchProducts } from '../page/public/searchProduto';
 import { Unauthorized } from '../page/public/unauthorized';
 
@@ -39,7 +39,7 @@ export const RoutesPath = {
   '/cadastrar': SignUp,
   '/unauthorized': Unauthorized,
   '/restricted': PaginaRestritaMobiles,
-  '/paymentSuccess': PaymentSuccess,
-  '/paymentFailed': PaymentFailed,
+  '/pagamentoConcluido': PagamentoConcluido,
+  '/falhaPagamento': FalhaPagamento,
   '/*': NotFound,
 };
