@@ -3,7 +3,6 @@ import { useContext, useMemo } from 'react';
 import { AdminRoutesPath, PrivateRoutesPath, RoutesPath, MaintenancePath } from './RoutesPath';
 import { PrivateRoute } from './PrivateRoutes';
 import { MaintenanceContext } from '../context/maintenanceContext';
-import { MaintenancePage } from '../page/public/maintenance';
 
 export const RouterManager = () => {
   const { isMaintenanceMode } = useContext(MaintenanceContext);

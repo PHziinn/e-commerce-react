@@ -9,6 +9,7 @@ import { Home } from '../page/public/home';
 import { Login } from '../page/public/login';
 import { MaintenancePage } from '../page/public/maintenance';
 import { NotFound } from '../page/public/notFound';
+import { PaginaRestritaMobiles } from '../page/public/PaginaRestritaMobiles';
 import { PaymentFailed } from '../page/public/paymentFailed';
 import { PaymentSuccess } from '../page/public/paymentSuccess';
 import { SearchProducts } from '../page/public/searchProduto';
@@ -37,6 +38,7 @@ export const RoutesPath = {
   '/login': Login,
   '/cadastrar': SignUp,
   '/unauthorized': Unauthorized,
+  '/restricted': PaginaRestritaMobiles,
   '/paymentSuccess': PaymentSuccess,
   '/paymentFailed': PaymentFailed,
   '/*': NotFound,
