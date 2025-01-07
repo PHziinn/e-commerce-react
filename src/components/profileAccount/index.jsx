@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Box,
   Button,
   Chip,
@@ -20,90 +19,68 @@ import {
   TableRow,
   TextField,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { MdCloudUpload, MdDelete, MdEdit } from 'react-icons/md';
+import { MdDelete, MdEdit } from 'react-icons/md';
+import { useUser } from '../../context/authContext';
+import { useAlert } from '../../hooks/ShowAlert';
+import { getByUsuario, patchUsuarios } from '../../service/api';
+import { AlertNotification } from '../AlertNotification';
+import { UploadAvatar } from './components/UploadAvatar';
+
+const roleColors = {
+  PAGO: '#6aa84f',
+  PENDENTE: '#f1c232',
+  CANCELADO: '#d32f2f',
+};
 
 export const ProfileAccount = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingPass, setIsEditingPass] = useState(false);
-  const [name, setName] = useState('João Silva');
-  const [email, setEmail] = useState('joao.silva@example.com');
+  const { user } = useUser();
+  const { alert, closeAlert, showAlert } = useAlert();
+  const client = useQueryClient();
 
-  const roleColors = {
-    PAGO: '#6aa84f',
-    PENDENTE: '#f1c232',
-    CANCELADO: '#d32f2f',
+  const { data: userData } = useQuery({
+    queryKey: ['usuarios', user?.id],
+    queryFn: () => getByUsuario(user?.id),
+    enabled: !!user?.id,
+    keepPreviousData: true,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+  });
+
+  const editUsuarioAvatarMutation = useMutation({
+    mutationFn: (data) => patchUsuarios(data.id, data.dataUser),
+    onSuccess: () => {
+      client.invalidateQueries(['usuarios']);
+      showAlert('Avatar atualizado com sucesso!', 'success');
+    },
+    onError: () => {
+      showAlert('Erro ao atualizar Avatar.', 'error');
+    },
+  });
+
+  const handleSaveEdit = (updatedUsuarioAvatar) => {
+    const formData = new FormData();
+    const { id, file, ...rest } = updatedUsuarioAvatar;
+
+    if (file) {
+      formData.append('file', file);
+    }
+
+    Object.entries(rest).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+
+    editUsuarioAvatarMutation.mutate({ id, dataUser: formData });
   };
-
-  const addresses = [
-    { id: 1, street: 'Rua das Flores, 123', city: 'São Paulo', state: 'SP', zip: '01000-000' },
-    { id: 2, street: 'Avenida Paulista, 456', city: 'São Paulo', state: 'SP', zip: '01310-000' },
-    { id: 3, street: 'Rua dos Bobos, 0', city: 'Belo Horizonte', state: 'MG', zip: '30100-000' },
-  ];
-
-  const initialProducts = [
-    {
-      id: '8588c07c-e16d-407a-bf1b-e3039e7b70c2',
-      status: 'PAGO',
-      name: 'Smartphone XYZ',
-      total: 999.99,
-      paymentId: 'pi_3QRFSrEzYsL2D5fA0SjIsjsB',
-      CartItems: [
-        {
-          id: '8588c07c-e16d-407a-bf1',
-          quantity: 10,
-          cartId: '8588c07c-e16d-407a-bf1b-e3039e7b70c2',
-          productId: '1568ad5d-c3e5-4be8-822e-bac27ac53221',
-        },
-      ],
-    },
-    {
-      id: '8588c07c-e16d-407a-bf1b-e3039e7b70c2',
-      status: 'PENDENTE',
-      name: 'Smartphone XYZ',
-      total: 999.99,
-      paymentId: 'pi_3QRFSrEzYsL2D5fA0SjIsjsB',
-      CartItems: [
-        {
-          id: '8588c07c-e16d-407a-bf1',
-          quantity: 10,
-          cartId: '8588c07c-e16d-407a-bf1b-e3039e7b70c2',
-          productId: '1568ad5d-c3e5-4be8-822e-bac27ac53221',
-        },
-      ],
-    },
-    {
-      id: '8588c07c-e16d-407a-bf1b-e3039e7b70c2',
-      status: 'PENDENTE',
-      name: 'Smartphone XYZ',
-      total: 999.99,
-      paymentId: 'pi_3QRFSrEzYsL2D5fA0SjIsjsB',
-      CartItems: [
-        {
-          id: '8588c07c-e16d-407a-bf1',
-          quantity: 10,
-          cartId: '8588c07c-e16d-407a-bf1b-e3039e7b70c2',
-          productId: '1568ad5d-c3e5-4be8-822e-bac27ac53221',
-        },
-      ],
-    },
-    {
-      id: '8588c07c-e16d-407a-bf1b-e3039e7b70c2',
-      status: 'CANCELADO',
-      name: 'Smartphone XYZ',
-      total: 999.99,
-      paymentId: 'pi_3QRFSrEzYsL2D5fA0SjIsjsB',
-      CartItems: [
-        {
-          id: '8588c07c-e16d-407a-bf1',
-          quantity: 10,
-          cartId: '8588c07c-e16d-407a-bf1b-e3039e7b70c2',
-          productId: '1568ad5d-c3e5-4be8-822e-bac27ac53221',
-        },
-      ],
-    },
-  ];
 
   const handleEditAddress = (id) => {
     console.log('Editando endereço com ID:', id);
@@ -113,47 +90,21 @@ export const ProfileAccount = () => {
     console.log('Deletando endereço com ID:', id);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsEditing(false);
-    setIsEditingPass(false);
-  };
   return (
     <Container
       maxWidth={false}
-      sx={{ py: 6 }}>
-      <Box sx={{ mb: 4 }}>
-        <Typography
-          variant="h6"
-          fontWeight="bold">
-          Foto do perfil
-        </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 4, mt: 2 }}>
-          <Avatar
-            src="https://res.cloudinary.com/dtk98bty4/image/upload/v1728862716/produtos/wwoedlsoaizy3leknzqg.jpg"
-            alt="Wohn Doe"
-            sx={{ width: 70, height: 70 }}
-          />
-          <Button
-            variant="contained"
-            sx={{
-              boxShadow: 'none',
-              background: '#000000',
-              fontWeight: 'bold',
-              transition: 'background-color 0.3s',
-              width: '11rem',
-              '&:hover': {
-                backgroundColor: '#999999',
-                color: '#000000',
-                fontWeight: 'bold',
-                boxShadow: 'none',
-              },
-            }}
-            startIcon={<MdCloudUpload />}>
-            Alterar Foto
-          </Button>
-        </Box>
-      </Box>
+      sx={{
+        maxWidth: isMobile ? '95vw' : '80vw',
+        paddingX: isMobile ? 0 : null,
+      }}>
+      <AlertNotification
+        closeAlert={closeAlert}
+        alert={alert}
+      />
+      <UploadAvatar
+        onSave={handleSaveEdit}
+        userData={userData}
+      />
 
       <Box sx={{ mb: 4 }}>
         <Typography
@@ -180,7 +131,7 @@ export const ProfileAccount = () => {
             fullWidth
             label="Nome"
             variant="outlined"
-            value={name}
+            value={userData?.user.name || ''}
             onChange={(e) => setName(e.target.value)}
             disabled={!isEditing}
           />
@@ -194,7 +145,7 @@ export const ProfileAccount = () => {
             label="Email"
             type="email"
             variant="outlined"
-            value={email}
+            value={userData?.user.email || ''}
             onChange={(e) => setEmail(e.target.value)}
             disabled={!isEditing}
           />
@@ -214,7 +165,6 @@ export const ProfileAccount = () => {
                   width: '8rem',
                   '&:hover': {
                     backgroundColor: '#a11f15',
-                    fontWeight: 'bold',
                     boxShadow: 'none',
                   },
                 }}>
@@ -229,9 +179,8 @@ export const ProfileAccount = () => {
                   transition: 'background-color 0.3s',
                   width: '8rem',
                   '&:hover': {
-                    backgroundColor: '#999999',
-                    color: '#000000',
-                    fontWeight: 'bold',
+                    backgroundColor: '#282828',
+                    color: 'white',
                     boxShadow: 'none',
                   },
                 }}>
@@ -250,9 +199,8 @@ export const ProfileAccount = () => {
                 transition: 'background-color 0.3s',
                 width: '10rem',
                 '&:hover': {
-                  backgroundColor: '#999999',
-                  color: '#000000',
-                  fontWeight: 'bold',
+                  backgroundColor: '#282828',
+                  color: 'white',
                   boxShadow: 'none',
                 },
               }}
@@ -290,7 +238,6 @@ export const ProfileAccount = () => {
             label="Sua senha"
             type="password"
             variant="outlined"
-            placeholder="********"
             disabled={!isEditingPass}
           />
         </Grid>
@@ -303,6 +250,7 @@ export const ProfileAccount = () => {
             label="Nova Senha"
             type="password"
             variant="outlined"
+            disabled={!isEditingPass}
           />
         </Grid>
         <Grid
@@ -314,6 +262,7 @@ export const ProfileAccount = () => {
             label="Confirmar Senha"
             type="password"
             variant="outlined"
+            disabled={!isEditingPass}
           />
         </Grid>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
@@ -330,7 +279,6 @@ export const ProfileAccount = () => {
                   width: '8rem',
                   '&:hover': {
                     backgroundColor: '#a11f15',
-                    fontWeight: 'bold',
                     boxShadow: 'none',
                   },
                 }}>
@@ -345,9 +293,8 @@ export const ProfileAccount = () => {
                   transition: 'background-color 0.3s',
                   width: '8rem',
                   '&:hover': {
-                    backgroundColor: '#999999',
-                    color: '#000000',
-                    fontWeight: 'bold',
+                    backgroundColor: '#282828',
+                    color: 'white',
                     boxShadow: 'none',
                   },
                 }}>
@@ -366,9 +313,8 @@ export const ProfileAccount = () => {
                 transition: 'background-color 0.3s',
                 width: '10rem',
                 '&:hover': {
-                  backgroundColor: '#999999',
-                  color: '#000000',
-                  fontWeight: 'bold',
+                  backgroundColor: '#282828',
+                  color: 'white',
                   boxShadow: 'none',
                 },
               }}
@@ -395,13 +341,13 @@ export const ProfileAccount = () => {
         </Typography>
       </Box>
       <List>
-        {addresses.map((address) => (
+        {userData?.user.Address.map((address) => (
           <ListItem
             key={address.id}
             sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <ListItemText
-              primary={address.street}
-              secondary={`${address.city} - ${address.state}, CEP: ${address.zip}`}
+              primary={`${address.street} - ${address.streetNumber}`}
+              secondary={`${address.city} - ${address.neighbourhood}, CEP: ${address.zipCode}`}
             />
             <Box sx={{ display: 'flex', gap: 1 }}>
               <IconButton
@@ -427,9 +373,7 @@ export const ProfileAccount = () => {
           <TableHead>
             <TableRow sx={{ backgroundColor: '#000000' }}>
               <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>ID</TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>
-                Nome
-              </TableCell>
+
               <TableCell sx={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>
                 Preço
               </TableCell>
@@ -440,22 +384,22 @@ export const ProfileAccount = () => {
           </TableHead>
 
           <TableBody>
-            {initialProducts.map((product) => (
-              <TableRow key={product.id}>
-                <TableCell>{product.paymentId}</TableCell>
-                <TableCell sx={{ textAlign: 'center' }}>{product.name}</TableCell>
+            {userData?.user.Carts.map((cart) => (
+              <TableRow key={cart.id}>
+                <TableCell>{cart.id}</TableCell>
+
                 <TableCell sx={{ textAlign: 'center' }}>
                   {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
-                    product.total
+                    cart.total
                   )}
                 </TableCell>
                 <TableCell sx={{ textAlign: 'center' }}>
                   <Chip
-                    label={product.status}
+                    label={cart.status}
                     sx={{
                       width: '6.8rem',
                       height: '1.5rem',
-                      backgroundColor: roleColors[product.status],
+                      backgroundColor: roleColors[cart.status],
                       color: '#fff',
                       fontWeight: 'bold',
                       textTransform: 'uppercase',
@@ -465,7 +409,7 @@ export const ProfileAccount = () => {
               </TableRow>
             ))}
 
-            {initialProducts.length === 0 && (
+            {userData?.user.Carts.length === 0 && (
               <TableRow>
                 <TableCell
                   colSpan={4}
