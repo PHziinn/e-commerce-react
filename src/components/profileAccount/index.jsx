@@ -1,22 +1,11 @@
 import {
   Box,
   Button,
-  Chip,
   Container,
   Divider,
-  Grid,
+  Grid2,
   IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  Pagination,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
+  InputAdornment,
   TextField,
   Typography,
   useMediaQuery,
@@ -24,18 +13,14 @@ import {
 } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { MdDelete, MdEdit } from 'react-icons/md';
+import { MdOutlineVisibility, MdOutlineVisibilityOff } from 'react-icons/md';
 import { useUser } from '../../context/authContext';
 import { useAlert } from '../../hooks/ShowAlert';
 import { getByUsuario, patchUsuarios } from '../../service/api';
 import { AlertNotification } from '../AlertNotification';
+import { TabelaCompras } from './components/TabelaCompras';
+import { TabelaEndereco } from './components/TabelaEndereco';
 import { UploadAvatar } from './components/UploadAvatar';
-
-const roleColors = {
-  PAGO: '#6aa84f',
-  PENDENTE: '#f1c232',
-  CANCELADO: '#d32f2f',
-};
 
 export const ProfileAccount = () => {
   const theme = useTheme();
@@ -43,9 +28,20 @@ export const ProfileAccount = () => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingPass, setIsEditingPass] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({});
+  const [passwordData, setPasswordData] = useState({});
+
   const { user } = useUser();
   const { alert, closeAlert, showAlert } = useAlert();
   const client = useQueryClient();
+
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+
+  const handleEditClick = () => {
+    setIsEditingPass(true);
+    setPasswordData({});
+  };
 
   const { data: userData } = useQuery({
     queryKey: ['usuarios', user?.id],
@@ -56,7 +52,7 @@ export const ProfileAccount = () => {
     refetchOnReconnect: true,
   });
 
-  const editUsuarioAvatarMutation = useMutation({
+  const updateAvatarUserMutation = useMutation({
     mutationFn: (data) => patchUsuarios(data.id, data.dataUser),
     onSuccess: () => {
       client.invalidateQueries(['usuarios']);
@@ -67,9 +63,36 @@ export const ProfileAccount = () => {
     },
   });
 
+  const updateUserMutation = useMutation({
+    mutationFn: (updatedData) => patchUsuarios(updatedData.id, updatedData.data),
+    onSuccess: () => {
+      client.invalidateQueries(['usuarios']);
+      showAlert('Informações pessoais atualizadas com sucesso!', 'success');
+      setIsEditing(false);
+    },
+    onError: () => {
+      showAlert('Erro ao atualizar as informações pessoais.', 'error');
+    },
+  });
+
+  const updatePasswordMutation = useMutation({
+    mutationFn: (data) => patchUsuarios(data.id, data.dataUser),
+    onSuccess: () => {
+      client.invalidateQueries(['usuarios']);
+      showAlert('Senha atualizada com sucesso!', 'success');
+      setIsEditingPass(false);
+      setPasswordData({});
+    },
+    onError: () => {
+      showAlert('Erro ao atualizar a senha.', 'error');
+    },
+  });
+
   const handleSaveEdit = (updatedUsuarioAvatar) => {
     const formData = new FormData();
     const { id, file, ...rest } = updatedUsuarioAvatar;
+
+    c;
 
     if (file) {
       formData.append('file', file);
@@ -79,15 +102,22 @@ export const ProfileAccount = () => {
       formData.append(key, value);
     });
 
-    editUsuarioAvatarMutation.mutate({ id, dataUser: formData });
+    updateAvatarUserMutation.mutate({ id, dataUser: formData });
   };
 
-  const handleEditAddress = (id) => {
-    console.log('Editando endereço com ID:', id);
+  const handleSaveEditPessoa = () => {
+    updateUserMutation.mutate({ id: userData?.user.id, data: formData });
   };
 
-  const handleDeleteAddress = (id) => {
-    console.log('Deletando endereço com ID:', id);
+  const handleSaveEditPass = () => {
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      showAlert('As senhas não coincidem.', 'error');
+      return;
+    }
+    updatePasswordMutation.mutate({
+      id: userData?.user.id,
+      dataUser: { password: passwordData.newPassword },
+    });
   };
 
   return (
@@ -120,37 +150,41 @@ export const ProfileAccount = () => {
         </Typography>
       </Box>
 
-      <Grid
+      <Grid2
         container
         spacing={2}>
-        <Grid
-          item
-          xs={12}
-          sm={6}>
-          <TextField
-            fullWidth
-            label="Nome"
-            variant="outlined"
-            value={userData?.user.name || ''}
-            onChange={(e) => setName(e.target.value)}
-            disabled={!isEditing}
-          />
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          sm={6}>
-          <TextField
-            fullWidth
-            label="Email"
-            type="email"
-            variant="outlined"
-            value={userData?.user.email || ''}
-            onChange={(e) => setEmail(e.target.value)}
-            disabled={!isEditing}
-          />
-        </Grid>
+        <Grid2 size={{ xs: 12, sm: 6 }}>
+          <Box
+            component={'form'}
+            autoComplete="off"
+            sx={{ width: '100%' }}>
+            <TextField
+              fullWidth
+              label="Nome"
+              variant="outlined"
+              value={formData.name || userData?.user.name || ''}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              disabled={!isEditing}
+            />
+          </Box>
+        </Grid2>
 
+        <Grid2 size={{ xs: 12, sm: 6 }}>
+          <Box
+            component={'form'}
+            autoComplete="off"
+            sx={{ width: '100%' }}>
+            <TextField
+              fullWidth
+              label="Email"
+              type="email"
+              variant="outlined"
+              value={formData.email || userData?.user.email || ''}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              disabled={!isEditing}
+            />
+          </Box>
+        </Grid2>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
           {isEditing ? (
             <Box sx={{ display: 'flex', gap: 1, mt: 5 }}>
@@ -172,6 +206,7 @@ export const ProfileAccount = () => {
               </Button>
               <Button
                 variant="contained"
+                onClick={handleSaveEditPessoa}
                 sx={{
                   boxShadow: 'none',
                   background: '#000000',
@@ -191,6 +226,7 @@ export const ProfileAccount = () => {
             <Button
               type="button"
               variant="contained"
+              onClick={() => setIsEditing(true)}
               sx={{
                 mt: 5,
                 boxShadow: 'none',
@@ -204,13 +240,13 @@ export const ProfileAccount = () => {
                   boxShadow: 'none',
                 },
               }}
-              onClick={() => setIsEditing(true)}
               fullWidth>
               Editar Perfil
             </Button>
           )}
         </Box>
-      </Grid>
+      </Grid2>
+
       <Divider sx={{ my: 4 }} />
 
       <Box sx={{ mb: 4 }}>
@@ -226,51 +262,80 @@ export const ProfileAccount = () => {
           Certifique-se de que sua senha seja segura e exclusiva.
         </Typography>
       </Box>
-      <Grid
+
+      <Grid2
         container
         spacing={3}>
-        <Grid
-          item
-          xs={12}
-          sm={6}>
-          <TextField
-            fullWidth
-            label="Sua senha"
-            type="password"
-            variant="outlined"
-            disabled={!isEditingPass}
-          />
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          sm={6}>
-          <TextField
-            fullWidth
-            label="Nova Senha"
-            type="password"
-            variant="outlined"
-            disabled={!isEditingPass}
-          />
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          sm={6}>
-          <TextField
-            fullWidth
-            label="Confirmar Senha"
-            type="password"
-            variant="outlined"
-            disabled={!isEditingPass}
-          />
-        </Grid>
+        <Grid2 size={{ xs: 12, sm: 6 }}>
+          <Box
+            component={'form'}
+            autoComplete="off"
+            sx={{ width: '100%' }}>
+            <Box
+              component={'input'}
+              type="text"
+              name="username"
+              style={{ display: 'none' }}
+              autoComplete="off"
+            />
+            <TextField
+              fullWidth
+              label="Nova Senha"
+              type={showPassword ? 'text' : 'password'}
+              variant="outlined"
+              value={passwordData.newPassword || ''}
+              onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+              disabled={!isEditingPass}
+              InputProps={{
+                autoComplete: 'new-password',
+                sx: { fontSize: '1rem' },
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={handleClickShowPassword}
+                      edge="end"
+                      sx={{ color: 'text.secondary' }}>
+                      {showPassword ? <MdOutlineVisibilityOff /> : <MdOutlineVisibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Box>
+        </Grid2>
+        <Grid2 size={{ xs: 12, sm: 6 }}>
+          <Box
+            component={'form'}
+            autoComplete="off"
+            sx={{ width: '100%' }}>
+            <Box
+              component={'input'}
+              type="text"
+              name="username"
+              style={{ display: 'none' }}
+              autoComplete="off"
+            />
+            <TextField
+              fullWidth
+              label="Confirmar Senha"
+              type={showPassword ? 'text' : 'password'}
+              variant="outlined"
+              value={passwordData.confirmPassword || ''}
+              onChange={(e) =>
+                setPasswordData({ ...passwordData, confirmPassword: e.target.value })
+              }
+              disabled={!isEditingPass}
+              inputProps={{ autoComplete: 'new-password' }}
+            />
+          </Box>
+        </Grid2>
+
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
           {isEditingPass ? (
             <Box sx={{ display: 'flex', gap: 1, mt: 5 }}>
               <Button
                 variant="contained"
-                onClick={() => setIsEditingPass(false)}
+                onClick={() => handleEditClick()}
                 sx={{
                   boxShadow: 'none',
                   background: '#bf2a1f',
@@ -286,6 +351,7 @@ export const ProfileAccount = () => {
               </Button>
               <Button
                 variant="contained"
+                onClick={handleSaveEditPass}
                 sx={{
                   boxShadow: 'none',
                   background: '#000000',
@@ -305,6 +371,7 @@ export const ProfileAccount = () => {
             <Button
               type="button"
               variant="contained"
+              onClick={() => setIsEditingPass(true)}
               sx={{
                 mt: 5,
                 boxShadow: 'none',
@@ -318,126 +385,17 @@ export const ProfileAccount = () => {
                   boxShadow: 'none',
                 },
               }}
-              onClick={() => setIsEditingPass(true)}
               fullWidth>
               Editar Perfil
             </Button>
           )}
         </Box>
-      </Grid>
+      </Grid2>
 
       <Divider sx={{ my: 4 }} />
-      <Box sx={{ mb: 4 }}>
-        <Typography
-          variant="h5"
-          fontWeight="bold">
-          Endereços cadastrados
-        </Typography>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          sx={{ mt: 1 }}>
-          Veja e edite seus endereços de entrega cadastrados.
-        </Typography>
-      </Box>
-      <List>
-        {userData?.user.Address.map((address) => (
-          <ListItem
-            key={address.id}
-            sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <ListItemText
-              primary={`${address.street} - ${address.streetNumber}`}
-              secondary={`${address.city} - ${address.neighbourhood}, CEP: ${address.zipCode}`}
-            />
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <IconButton
-                color="primary"
-                onClick={() => handleEditAddress(address.id)}>
-                <MdEdit />
-              </IconButton>
-              <IconButton
-                color="error"
-                onClick={() => handleDeleteAddress(address.id)}>
-                <MdDelete />
-              </IconButton>
-            </Box>
-          </ListItem>
-        ))}
-      </List>
 
-      <TableContainer
-        component={Paper}
-        elevation={37}
-        sx={{ boxShadow: 'none', mt: 10 }}>
-        <Table>
-          <TableHead>
-            <TableRow sx={{ backgroundColor: '#000000' }}>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>ID</TableCell>
-
-              <TableCell sx={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>
-                Preço
-              </TableCell>
-              <TableCell sx={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>
-                Status
-              </TableCell>
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {userData?.user.Carts.map((cart) => (
-              <TableRow key={cart.id}>
-                <TableCell>{cart.id}</TableCell>
-
-                <TableCell sx={{ textAlign: 'center' }}>
-                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
-                    cart.total
-                  )}
-                </TableCell>
-                <TableCell sx={{ textAlign: 'center' }}>
-                  <Chip
-                    label={cart.status}
-                    sx={{
-                      width: '6.8rem',
-                      height: '1.5rem',
-                      backgroundColor: roleColors[cart.status],
-                      color: '#fff',
-                      fontWeight: 'bold',
-                      textTransform: 'uppercase',
-                    }}
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
-
-            {userData?.user.Carts.length === 0 && (
-              <TableRow>
-                <TableCell
-                  colSpan={4}
-                  align="center">
-                  <Typography
-                    variant="body1"
-                    sx={{ color: '#757575', py: 2 }}>
-                    Nenhum produto encontrado.
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      <Box
-        display="flex"
-        justifyContent="flex-end"
-        mt={3}>
-        <Pagination
-          count={3}
-          color="primary"
-          variant="outlined"
-          showFirstButton
-          showLastButton
-        />
-      </Box>
+      <TabelaEndereco userData={userData} />
+      <TabelaCompras userData={userData} />
     </Container>
   );
 };
