@@ -84,7 +84,9 @@ export const ProfileAccount = () => {
 
   const handleEditAddress = () => {};
 
-  const handleDeleteAddress = () => {};
+  const handleDeleteAddress = () => {
+    console.log('ola');
+  };
 
   return (
     <Container
