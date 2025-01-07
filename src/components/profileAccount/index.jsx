@@ -82,13 +82,9 @@ export const ProfileAccount = () => {
     editUsuarioAvatarMutation.mutate({ id, dataUser: formData });
   };
 
-  const handleEditAddress = (id) => {
-    console.log('Editando endereço com ID:', id);
-  };
+  const handleEditAddress = () => {};
 
-  const handleDeleteAddress = (id) => {
-    console.log('Deletando endereço com ID:', id);
-  };
+  const handleDeleteAddress = () => {};
 
   return (
     <Container
