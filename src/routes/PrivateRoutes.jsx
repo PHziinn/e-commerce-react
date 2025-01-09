@@ -1,12 +1,12 @@
 import { useContext } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { AuthContext } from '../context/authContext';
-import { useMediaQuery, useTheme } from '@mui/material';
+import { isMobileDevice } from '../utils/isMobileDevice';
 
 export const PrivateRoute = ({ requiredRole }) => {
   const { signed, user } = useContext(AuthContext);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const isMobile = isMobileDevice();
 
   const restrictedRoutesForMobile = [
     '/admin/dashboard',
