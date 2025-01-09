@@ -1,6 +1,5 @@
 import {
   Chip,
-  Pagination,
   Paper,
   Table,
   TableBody,
@@ -10,7 +9,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { Box } from '@mui/system';
+import { useConvertValues } from '../../../../hooks/ConvertValues';
 
 const roleColors = {
   PAGO: '#6aa84f',
@@ -19,7 +18,8 @@ const roleColors = {
 };
 
 export const TabelaCompras = ({ userData }) => {
-  const usuarios = userData?.user;
+  const compras = userData?.user.Carts;
+  const { convertValues } = useConvertValues();
   return (
     <>
       <TableContainer
@@ -41,15 +41,11 @@ export const TabelaCompras = ({ userData }) => {
           </TableHead>
 
           <TableBody>
-            {usuarios?.Carts.map((cart) => (
+            {compras?.map((cart) => (
               <TableRow key={cart.id}>
                 <TableCell>{cart.id}</TableCell>
 
-                <TableCell sx={{ textAlign: 'center' }}>
-                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
-                    cart.total
-                  )}
-                </TableCell>
+                <TableCell sx={{ textAlign: 'center' }}>{convertValues(cart.total)}</TableCell>
                 <TableCell sx={{ textAlign: 'center' }}>
                   <Chip
                     label={cart.status}
@@ -66,7 +62,7 @@ export const TabelaCompras = ({ userData }) => {
               </TableRow>
             ))}
 
-            {usuarios?.Carts.length === 0 && (
+            {compras?.length === 0 && (
               <TableRow>
                 <TableCell
                   colSpan={4}
@@ -82,19 +78,6 @@ export const TabelaCompras = ({ userData }) => {
           </TableBody>
         </Table>
       </TableContainer>
-
-      <Box
-        display="flex"
-        justifyContent="flex-end"
-        mt={3}>
-        <Pagination
-          count={3}
-          color="primary"
-          variant="outlined"
-          showFirstButton
-          showLastButton
-        />
-      </Box>
     </>
   );
 };
