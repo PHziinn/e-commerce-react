@@ -4,6 +4,9 @@ import {
   Badge,
   Box,
   IconButton,
+  ListItemIcon,
+  Menu,
+  MenuItem,
   Toolbar,
   Typography,
   useMediaQuery,
@@ -12,7 +15,12 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { FaCircleUser } from 'react-icons/fa6';
-import { MdAdminPanelSettings, MdOutlineShoppingCart } from 'react-icons/md';
+import {
+  MdAccountCircle,
+  MdAdminPanelSettings,
+  MdLogout,
+  MdOutlineShoppingCart,
+} from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import TechDev from '../../../public/logoWhite.svg';
@@ -30,8 +38,10 @@ export const PrimarySearchBar = () => {
   const [cartOpen, setCartOpen] = useState(false);
   const [messageSocket, setMessageSocket] = useState();
   const [isFeedAnuncio, setIsFeedAnuncio] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
   const [scrollY, setScrollY] = useState(0);
-  const { user } = useUser();
+  const { user, signOut } = useUser();
 
   const { data } = useQuery({
     queryKey: ['settings'],
@@ -88,6 +98,18 @@ export const PrimarySearchBar = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  const handleLogout = () => {
+    signOut();
+  };
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <>
@@ -151,8 +173,47 @@ export const PrimarySearchBar = () => {
                           width: 45,
                           height: 45,
                         }}
-                        onClick={() => navigate(`/perfil`)}
+                        onClick={handleMenuOpen}
                       />
+                      <Menu
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleMenuClose}
+                        MenuListProps={{
+                          'aria-labelledby': 'basic-button',
+                        }}>
+                        <MenuItem
+                          onClick={() => {
+                            navigate('/perfil');
+                            handleMenuClose();
+                          }}>
+                          <ListItemIcon>
+                            <MdAccountCircle size={23} />
+                          </ListItemIcon>
+                          <Typography variant="inherit">Perfil</Typography>
+                          <Typography
+                            variant="caption"
+                            sx={{ ml: 1, color: 'text.secondary' }}>
+                            Veja e edite suas informações
+                          </Typography>
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => {
+                            handleLogout();
+                            handleMenuClose();
+                          }}>
+                          <ListItemIcon>
+                            <MdLogout size={23} />
+                          </ListItemIcon>
+                          <Typography variant="inherit">Sair</Typography>
+                          <Typography
+                            variant="caption"
+                            sx={{ ml: 1, color: 'text.secondary' }}>
+                            Desconecte-se da sua conta
+                          </Typography>
+                        </MenuItem>
+                      </Menu>
+
                       {!isMobile && (
                         <Typography
                           sx={{ color: '#fff', fontSize: '0.865rem' }}
