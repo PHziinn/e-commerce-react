@@ -69,6 +69,18 @@ export async function deleteUsuarios(id) {
   return response.data;
 }
 
+// Endereços
+export async function patchAddress(id, updatedAddress) {
+  const response = await axiosClient.patch(`/enderecos/${id}`, updatedAddress);
+
+  return response.data;
+}
+export async function deleteAddress(id) {
+  const response = await axiosClient.delete(`/enderecos/${id}`);
+
+  return response.data;
+}
+
 // Settings
 export async function getAllSettings() {
   const response = await axiosClient.get(`/settings`);
@@ -77,6 +89,13 @@ export async function getAllSettings() {
 }
 export async function patchSettings(id, updatedSettings) {
   const response = await axiosClient.patch(`/settings/${id}`, updatedSettings);
+
+  return response.data;
+}
+
+// Via CEP
+export async function fetchAddressByCep(cep) {
+  const response = await axiosClient.get(`/proxy/viacep/${cep}`);
 
   return response.data;
 }

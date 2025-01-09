@@ -6,6 +6,7 @@ import {
   Grid2,
   IconButton,
   InputAdornment,
+  Pagination,
   TextField,
   Typography,
   useMediaQuery,
@@ -16,7 +17,7 @@ import { useState } from 'react';
 import { MdOutlineVisibility, MdOutlineVisibilityOff } from 'react-icons/md';
 import { useUser } from '../../context/authContext';
 import { useAlert } from '../../hooks/ShowAlert';
-import { getByUsuario, patchUsuarios } from '../../service/api';
+import { deleteAddress, getByUsuario, patchAddress, patchUsuarios } from '../../service/api';
 import { AlertNotification } from '../AlertNotification';
 import { TabelaCompras } from './components/TabelaCompras';
 import { TabelaEndereco } from './components/TabelaEndereco';
@@ -25,7 +26,7 @@ import { UploadAvatar } from './components/UploadAvatar';
 export const ProfileAccount = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
+  const [page, setPage] = useState(1);
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingPass, setIsEditingPass] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -52,7 +53,7 @@ export const ProfileAccount = () => {
     refetchOnReconnect: true,
   });
 
-  const updateAvatarUserMutation = useMutation({
+  const { mutate: updateAvatarUserMutation, isPending } = useMutation({
     mutationFn: (data) => patchUsuarios(data.id, data.dataUser),
     onSuccess: () => {
       client.invalidateQueries(['usuarios']);
@@ -88,11 +89,33 @@ export const ProfileAccount = () => {
     },
   });
 
+  const updateAddressMutation = useMutation({
+    mutationFn: (addressData) => patchAddress(addressData.id, addressData.data),
+    onSuccess: () => {
+      client.invalidateQueries(['enderecos']);
+      showAlert('Endereço atualizadas com sucesso!', 'success');
+      setIsEditing(false);
+    },
+    onError: () => {
+      showAlert('Erro ao atualizar Endereço.', 'error');
+    },
+  });
+
+  const deleteAddressMutation = useMutation({
+    mutationFn: (id) => deleteAddress(id),
+    onSuccess: () => {
+      client.invalidateQueries(['produtos']);
+      showAlert('Endereço deletado com sucesso!', 'success');
+    },
+    onError: (error) => {
+      console.error('Erro ao deletar produto:', error);
+      showAlert('Erro ao deletar Endereço.', 'error');
+    },
+  });
+
   const handleSaveEdit = (updatedUsuarioAvatar) => {
     const formData = new FormData();
     const { id, file, ...rest } = updatedUsuarioAvatar;
-
-    c;
 
     if (file) {
       formData.append('file', file);
@@ -102,7 +125,7 @@ export const ProfileAccount = () => {
       formData.append(key, value);
     });
 
-    updateAvatarUserMutation.mutate({ id, dataUser: formData });
+    updateAvatarUserMutation({ id, dataUser: formData });
   };
 
   const handleSaveEditPessoa = () => {
@@ -120,6 +143,18 @@ export const ProfileAccount = () => {
     });
   };
 
+  const handleSaveAddress = (updatedAddress) => {
+    updateAddressMutation.mutate({ id: updatedAddress?.id, data: updatedAddress });
+  };
+
+  const handleDeleteProduto = (id) => {
+    deleteAddressMutation.mutate(id);
+  };
+
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+  };
+
   return (
     <Container
       maxWidth={false}
@@ -134,8 +169,8 @@ export const ProfileAccount = () => {
       <UploadAvatar
         onSave={handleSaveEdit}
         userData={userData}
+        isPending={isPending}
       />
-
       <Box sx={{ mb: 4 }}>
         <Typography
           variant="h4"
@@ -149,7 +184,6 @@ export const ProfileAccount = () => {
           Atualize suas informações pessoais.
         </Typography>
       </Box>
-
       <Grid2
         container
         spacing={2}>
@@ -246,9 +280,7 @@ export const ProfileAccount = () => {
           )}
         </Box>
       </Grid2>
-
       <Divider sx={{ my: 4 }} />
-
       <Box sx={{ mb: 4 }}>
         <Typography
           variant="h5"
@@ -262,7 +294,6 @@ export const ProfileAccount = () => {
           Certifique-se de que sua senha seja segura e exclusiva.
         </Typography>
       </Box>
-
       <Grid2
         container
         spacing={3}>
@@ -391,11 +422,32 @@ export const ProfileAccount = () => {
           )}
         </Box>
       </Grid2>
-
       <Divider sx={{ my: 4 }} />
 
-      <TabelaEndereco userData={userData} />
+      <TabelaEndereco
+        userData={userData}
+        onEdit={handleSaveAddress}
+        onDelete={handleDeleteProduto}
+      />
+
       <TabelaCompras userData={userData} />
+
+      <Box
+        display="flex"
+        justifyContent="flex-end"
+        mt={3}>
+        {userData?.length === 0 && userData?.totalPages !== 1 && (
+          <Pagination
+            count={userData?.totalPages || 1}
+            page={page}
+            onChange={handlePageChange}
+            color="primary"
+            variant="outlined"
+            showFirstButton
+            showLastButton
+          />
+        )}
+      </Box>
     </Container>
   );
 };
