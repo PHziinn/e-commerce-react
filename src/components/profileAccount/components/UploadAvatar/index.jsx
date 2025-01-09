@@ -8,150 +8,35 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { useCallback, useEffect, useState } from 'react';
 import Cropper from 'react-easy-crop';
 import { MdCloudUpload } from 'react-icons/md';
+import { useImageCropper } from '../../../../hooks/useImageCropper';
 
 export const UploadAvatar = ({ userData, onSave, isPending }) => {
-  const usuario = userData?.user;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const [formData, setFormData] = useState(usuario);
-  const [preview, setPreview] = useState(userData?.user.avatar);
-  const [isNewImage, setIsNewImage] = useState(false);
-  const [imageSrc, setImageSrc] = useState();
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
-  const [cropAreaPixels, setCropAreaPixels] = useState(null);
+  const {
+    formData,
+    preview,
+    isNewImage,
+    imageSrc,
+    crop,
+    zoom,
+    setCrop,
+    setZoom,
+    handleImageUpload,
+    handleImageRemove,
+    handleSaveCroppedImage,
+    onCropComplete,
+  } = useImageCropper(userData?.user);
 
-  useEffect(() => {
-    setFormData(usuario);
-    setPreview(usuario?.avatar);
-    setIsNewImage(false);
-  }, [usuario]);
-
-  const handleImageUpload = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    readFile(file).then((imageDataUrl) => {
-      setImageSrc(imageDataUrl);
-
-      setFormData((prev) => ({
-        ...prev,
-        file: file,
-      }));
-
-      setIsNewImage(true);
-    });
-  };
-
-  const handleImageRemove = () => {
-    if (formData.avatar) {
-      URL.revokeObjectURL(formData.avatar);
-    }
-
-    setFormData((prev) => ({
-      ...prev,
-      avatar: null,
-      file: null,
-    }));
-
-    const fileInput = document.querySelector('input[type="file"]');
-    if (fileInput) fileInput.value = '';
-
-    setPreview(usuario?.avatar);
-    setIsNewImage(false);
-  };
-
-  const readFile = (file) => {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.readAsDataURL(file);
-    });
-  };
-
-  const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
-    setCropAreaPixels(croppedAreaPixels);
-  }, []);
-
-  const handleSaveCroppedImage = async () => {
-    if (imageSrc && cropAreaPixels) {
-      try {
-        const croppedImage = await getCroppedImg(imageSrc, cropAreaPixels);
-
-        setPreview(croppedImage);
-        const file = await dataUrlToFile(croppedImage, 'avatar.jpg');
-
-        const updatedFormData = {
-          ...formData,
-          avatar: croppedImage,
-          file: file,
-        };
-
-        if (onSave) {
-          onSave(updatedFormData);
-        }
-        const fileInput = document.querySelector('input[type="file"]');
-        if (fileInput) fileInput.value = '';
-      } catch (error) {
-        console.error('Erro ao recortar a imagem:', error);
-      }
+  const handleSave = async () => {
+    const croppedFile = await handleSaveCroppedImage();
+    if (croppedFile && onSave) {
+      onSave({ ...formData, file: croppedFile });
     }
   };
-
-  async function getCroppedImg(imageSrc, pixelCrop) {
-    const image = await createImage(imageSrc);
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-
-    if (!ctx) return '';
-
-    canvas.width = pixelCrop.width;
-    canvas.height = pixelCrop.height;
-
-    ctx.drawImage(
-      image,
-      pixelCrop.x,
-      pixelCrop.y,
-      pixelCrop.width,
-      pixelCrop.height,
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
-
-    return new Promise((resolve, reject) => {
-      canvas.toBlob((blob) => {
-        if (blob) {
-          const croppedImageUrl = URL.createObjectURL(blob);
-
-          resolve(croppedImageUrl);
-        } else {
-          reject('Erro ao gerar o blob da imagem');
-        }
-      }, 'image/jpeg');
-    });
-  }
-
-  function createImage(url) {
-    return new Promise((resolve, reject) => {
-      const image = new Image();
-      image.addEventListener('load', () => resolve(image));
-      image.addEventListener('error', (error) => reject(error));
-      image.setAttribute('crossOrigin', 'anonymous');
-      image.src = url;
-    });
-  }
-
-  function dataUrlToFile(dataUrl, filename) {
-    return fetch(dataUrl)
-      .then((res) => res.blob())
-      .then((blob) => new File([blob], filename, { type: 'image/jpeg' }));
-  }
 
   return (
     <Box sx={{ marginTop: isMobile ? 25 : '10rem', mb: 4 }}>
@@ -266,7 +151,7 @@ export const UploadAvatar = ({ userData, onSave, isPending }) => {
             </Button>
             <Button
               variant="contained"
-              onClick={handleSaveCroppedImage}
+              onClick={handleSave}
               sx={{
                 boxShadow: 'none',
                 color: 'white',
