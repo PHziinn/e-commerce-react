@@ -1,25 +1,126 @@
-import { Box, IconButton, List, ListItem, ListItemText, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
+import { useState } from 'react';
 import { MdDelete, MdEdit } from 'react-icons/md';
+import { ConfirmDelete } from '../../../ConfirmDelete';
+import { ModalAddress } from './ModalAddress';
 
-export const TabelaEndereco = ({ userData }) => {
-  const usuarios = userData?.user;
+export const TabelaEndereco = ({ userData, onSave, onEdit, onDelete }) => {
+  const address = userData?.user?.Address;
+  const userId = userData?.user?.id;
+
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [addressToDelete, setAddressToDelete] = useState(null);
+  const [isConfirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const handleEditAddress = (id) => {
+    const endereco = address.find((user) => user.id === id);
+    setSelectedAddress(endereco);
+    setEditModalOpen(true);
+  };
+
+  const handleSaveEditAddress = (updatedAddress) => {
+    if (selectedAddress) {
+      onEdit(updatedAddress);
+    } else {
+      const addressWithUserId = { ...updatedAddress, userId };
+      onSave(addressWithUserId);
+    }
+    setEditModalOpen(false);
+  };
+
+  const handleAddAddress = () => {
+    setSelectedAddress(null);
+    setEditModalOpen(true);
+  };
+
+  const handleDeleteAddress = (id) => {
+    setAddressToDelete(id);
+    setConfirmDeleteOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (addressToDelete) {
+      onDelete(addressToDelete);
+      setConfirmDeleteOpen(false);
+    }
+  };
+
+  const deleteMessage = () => {
+    return `Você tem certeza de que deseja excluir endereço`;
+  };
+
   return (
     <>
-      <Box sx={{ mb: 4 }}>
-        <Typography
-          variant="h5"
-          fontWeight="bold">
-          Endereços cadastrados
-        </Typography>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          sx={{ mt: 1 }}>
-          Veja e edite seus endereços de entrega cadastrados.
-        </Typography>
+      <Box
+        sx={{
+          mb: 4,
+          display: 'flex',
+          flexDirection: isMobile ? 'column' : 'row',
+          justifyContent: 'space-between',
+        }}>
+        <Box
+          sx={{
+            width: '100%',
+          }}>
+          <Typography
+            fontWeight="bold"
+            sx={{
+              mt: 1,
+              fontSize: '1.3rem',
+            }}>
+            Endereços cadastrados
+          </Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{
+              mt: 1,
+            }}>
+            Veja e edite seus endereços de entrega cadastrados.
+          </Typography>
+        </Box>
+        <Box
+          sx={{
+            mt: isMobile ? 2 : 0,
+            width: '100%',
+            textAlign: isMobile ? 'center' : 'right',
+          }}>
+          <Button
+            variant="contained"
+            onClick={() => handleAddAddress()}
+            sx={{
+              boxShadow: 'none',
+              background: '#000000',
+              fontWeight: 'bold',
+              transition: 'background-color 0.3s',
+              width: isMobile ? '100%' : '13rem',
+              fontSize: '0.8rem',
+              '&:hover': {
+                backgroundColor: '#282828',
+                color: 'white',
+                boxShadow: 'none',
+              },
+            }}>
+            Adicionar endereço
+          </Button>
+        </Box>
       </Box>
+
       <List>
-        {usuarios?.Address.map((address) => (
+        {address?.map((address) => (
           <ListItem
             key={address.id}
             sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -42,7 +143,7 @@ export const TabelaEndereco = ({ userData }) => {
           </ListItem>
         ))}
 
-        {usuarios?.Address.length === 0 && (
+        {address?.length === 0 && (
           <ListItem>
             <ListItemText
               sx={{ color: '#757575', py: 2, textAlign: 'center' }}
@@ -50,6 +151,24 @@ export const TabelaEndereco = ({ userData }) => {
           </ListItem>
         )}
       </List>
+
+      <ModalAddress
+        open={isEditModalOpen}
+        onClose={() => setEditModalOpen(false)}
+        address={selectedAddress}
+        onSave={handleSaveEditAddress}
+        isEditMode={selectedAddress !== null}
+      />
+
+      <ConfirmDelete
+        open={isConfirmDeleteOpen}
+        onClose={() => setConfirmDeleteOpen(false)}
+        onConfirm={confirmDelete}
+        message={deleteMessage()}
+        name={`${address?.find((address) => address.id === addressToDelete)?.street} ${' -'} ${
+          address?.find((address) => address.id === addressToDelete)?.streetNumber
+        }`}
+      />
     </>
   );
 };

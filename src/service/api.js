@@ -70,6 +70,11 @@ export async function deleteUsuarios(id) {
 }
 
 // Endereços
+export async function createAddress(updatedAddress) {
+  const response = await axiosClient.post(`/enderecos`, updatedAddress);
+
+  return response.data;
+}
 export async function patchAddress(id, updatedAddress) {
   const response = await axiosClient.patch(`/enderecos/${id}`, updatedAddress);
 

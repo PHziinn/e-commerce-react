@@ -17,7 +17,13 @@ import { useState } from 'react';
 import { MdOutlineVisibility, MdOutlineVisibilityOff } from 'react-icons/md';
 import { useUser } from '../../context/authContext';
 import { useAlert } from '../../hooks/ShowAlert';
-import { deleteAddress, getByUsuario, patchAddress, patchUsuarios } from '../../service/api';
+import {
+  createAddress,
+  deleteAddress,
+  getByUsuario,
+  patchAddress,
+  patchUsuarios,
+} from '../../service/api';
 import { AlertNotification } from '../AlertNotification';
 import { TabelaCompras } from './components/TabelaCompras';
 import { TabelaEndereco } from './components/TabelaEndereco';
@@ -40,7 +46,7 @@ export const ProfileAccount = () => {
   const handleClickShowPassword = () => setShowPassword(!showPassword);
 
   const handleEditClick = () => {
-    setIsEditingPass(true);
+    setIsEditingPass(false);
     setPasswordData({});
   };
 
@@ -94,10 +100,20 @@ export const ProfileAccount = () => {
     onSuccess: () => {
       client.invalidateQueries(['enderecos']);
       showAlert('Endereço atualizadas com sucesso!', 'success');
-      setIsEditing(false);
     },
     onError: () => {
       showAlert('Erro ao atualizar Endereço.', 'error');
+    },
+  });
+
+  const createAddressMutation = useMutation({
+    mutationFn: (addressData) => createAddress(addressData.data),
+    onSuccess: () => {
+      client.invalidateQueries(['enderecos']);
+      showAlert('Endereço cadastrado com sucesso!', 'success');
+    },
+    onError: () => {
+      showAlert('Erro ao cadastrar Endereço.', 'error');
     },
   });
 
@@ -134,7 +150,11 @@ export const ProfileAccount = () => {
 
   const handleSaveEditPass = () => {
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      showAlert('As senhas não coincidem.', 'error');
+      showAlert('As senhas não coincidem. Tente novamente.', 'error');
+      return;
+    }
+    if (passwordData.newPassword.length === 0 && passwordData.confirmPassword.length === 0) {
+      showAlert('Por favor, preencha os campos de senha.', 'info');
       return;
     }
     updatePasswordMutation.mutate({
@@ -145,6 +165,10 @@ export const ProfileAccount = () => {
 
   const handleSaveAddress = (updatedAddress) => {
     updateAddressMutation.mutate({ id: updatedAddress?.id, data: updatedAddress });
+  };
+
+  const handleSaveCreateAddress = (createAddress) => {
+    createAddressMutation.mutate({ data: createAddress });
   };
 
   const handleDeleteProduto = (id) => {
@@ -426,6 +450,7 @@ export const ProfileAccount = () => {
 
       <TabelaEndereco
         userData={userData}
+        onSave={handleSaveCreateAddress}
         onEdit={handleSaveAddress}
         onDelete={handleDeleteProduto}
       />
