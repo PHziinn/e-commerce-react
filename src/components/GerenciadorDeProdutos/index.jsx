@@ -4,11 +4,11 @@ import { styled } from '@mui/material/styles';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { MdAddShoppingCart, MdOutlineManageSearch } from 'react-icons/md';
-import { useAlert } from '../../hooks/ShowAlert';
 import { deleteProdutos, getAllProdutos, patchProdutos, postProdutos } from '../../service/api';
 import { AlertNotification } from '../AlertNotification';
 import { AddProdutosModal } from './components/AdicionarProdutos';
 import { TabelaDeProdutos } from './components/TabelaDeProdutos';
+import { useAlert } from '../../hooks/useShowAlert';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',

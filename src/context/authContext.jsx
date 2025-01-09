@@ -2,8 +2,9 @@ import { Box, CircularProgress } from '@mui/material';
 import { jwtDecode } from 'jwt-decode';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { AlertNotification } from '../components/AlertNotification/index.jsx';
-import { useAlert } from '../hooks/ShowAlert';
+
 import { axiosClient } from '../service/api.js';
+import { useAlert } from '../hooks/useShowAlert/index.js';
 
 export const AuthContext = createContext();
 

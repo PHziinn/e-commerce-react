@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { MdDelete, MdModeEdit } from 'react-icons/md';
-import { useConvertValues, useFormatNumber } from '../../../../hooks/ConvertValues';
+import { useConvertValues, useFormatNumber } from '../../../../utils/ConvertValues';
 import { ConfirmDelete } from '../../../ConfirmDelete';
 import { EditProdutosModal } from '../EditalProdutosModal';
 

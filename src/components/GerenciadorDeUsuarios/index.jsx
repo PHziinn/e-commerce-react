@@ -4,10 +4,11 @@ import { styled } from '@mui/material/styles';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { PiUserList } from 'react-icons/pi';
-import { useAlert } from '../../hooks/ShowAlert';
+
 import { deleteUsuarios, getAllUsuarios, patchUsuarios } from '../../service/api';
 import { AlertNotification } from '../AlertNotification';
 import { TabelaDeUsuarios } from './components/TabelaDeUsuarios';
+import { useAlert } from '../../hooks/useShowAlert';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',

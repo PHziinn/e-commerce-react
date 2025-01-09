@@ -23,8 +23,8 @@ import {
 } from 'chart.js';
 import { Doughnut, Line } from 'react-chartjs-2';
 import { FaBoxes, FaUsers, FaUsersSlash } from 'react-icons/fa';
-import { useFormatNumber } from '../../hooks/ConvertValues';
 import { getAllProdutos, getAllUsuarios } from '../../service/api';
+import { useFormatNumber } from '../../utils/ConvertValues';
 
 ChartJS.register(
   ArcElement,

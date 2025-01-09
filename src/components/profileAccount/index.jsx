@@ -16,7 +16,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { MdOutlineVisibility, MdOutlineVisibilityOff } from 'react-icons/md';
 import { useUser } from '../../context/authContext';
-import { useAlert } from '../../hooks/ShowAlert';
 import {
   createAddress,
   deleteAddress,
@@ -28,6 +27,7 @@ import { AlertNotification } from '../AlertNotification';
 import { TabelaCompras } from './components/TabelaCompras';
 import { TabelaEndereco } from './components/TabelaEndereco';
 import { UploadAvatar } from './components/UploadAvatar';
+import { useAlert } from '../../hooks/useShowAlert';
 
 export const ProfileAccount = () => {
   const theme = useTheme();

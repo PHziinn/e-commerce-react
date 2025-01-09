@@ -9,7 +9,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { useConvertValues } from '../../../../hooks/ConvertValues';
+import { useConvertValues } from '../../../../utils/ConvertValues';
 
 const roleColors = {
   PAGO: '#6aa84f',

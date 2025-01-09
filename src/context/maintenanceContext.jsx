@@ -3,8 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { createContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { AlertNotification } from '../components/AlertNotification';
-import { useAlert } from '../hooks/ShowAlert';
 import { getAllSettings } from '../service/api';
+import { useAlert } from '../hooks/useShowAlert';
 
 export const MaintenanceContext = createContext();
 

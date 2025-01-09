@@ -19,8 +19,8 @@ import {
 } from '@mui/material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AlertNotification } from '../../../components/AlertNotification';
-import { useAlert } from '../../../hooks/ShowAlert';
 import { createUsuario } from '../../../service/api';
+import { useAlert } from '../../../hooks/useShowAlert';
 
 export const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);

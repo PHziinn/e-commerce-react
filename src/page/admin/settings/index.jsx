@@ -12,8 +12,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { AlertNotification } from '../../../components/AlertNotification';
 import { PainelAdministrativo } from '../../../components/layout/painelAdministrativo';
-import { useAlert } from '../../../hooks/ShowAlert';
 import { getAllSettings, patchSettings } from '../../../service/api';
+import { useAlert } from '../../../hooks/useShowAlert';
 
 export const AdminSettings = () => {
   const [feedMessage, setFeedMessage] = useState();

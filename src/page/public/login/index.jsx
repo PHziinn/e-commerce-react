@@ -21,7 +21,7 @@ import { MdAccountCircle, MdOutlineVisibility, MdOutlineVisibilityOff } from 're
 import { useNavigate } from 'react-router-dom';
 import { AlertNotification } from '../../../components/AlertNotification';
 import { AuthContext } from '../../../context/authContext';
-import { useAlert } from '../../../hooks/ShowAlert';
+import { useAlert } from '../../../hooks/useShowAlert';
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
