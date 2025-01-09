@@ -153,7 +153,16 @@ export const ProfileAccount = () => {
       showAlert('As senhas não coincidem. Tente novamente.', 'error');
       return;
     }
-    if (passwordData.newPassword.length === 0 && passwordData.confirmPassword.length === 0) {
+    if (passwordData.newPassword.length < 8 || passwordData.confirmPassword.length < 8) {
+      showAlert('As senhas devem ter pelo menos 8 caracteres. Tente novamente.', 'error');
+      return;
+    }
+    if (
+      !passwordData.newPassword ||
+      !passwordData.confirmPassword ||
+      passwordData.newPassword.length === 0 ||
+      passwordData.confirmPassword.length === 0
+    ) {
       showAlert('Por favor, preencha os campos de senha.', 'info');
       return;
     }
