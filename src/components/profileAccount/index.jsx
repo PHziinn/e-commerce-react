@@ -115,7 +115,7 @@ export const ProfileAccount = () => {
 
   const handleSaveEdit = (updatedUsuarioAvatar) => {
     const formData = new FormData();
-    const { id, file, ...rest } = updatedUsuarioAvatar;
+    const { id, file, password, ...rest } = updatedUsuarioAvatar;
 
     if (file) {
       formData.append('file', file);
