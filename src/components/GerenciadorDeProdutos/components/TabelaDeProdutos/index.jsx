@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Box,
   Chip,
   CircularProgress,
   IconButton,
@@ -101,7 +102,21 @@ export const TabelaDeProdutos = ({ data, isLoading, isError, onDelete, onEdit })
                   />
                 </TableCell>
                 <TableCell align="center">{product.sku}</TableCell>
-                <TableCell align="center">{product.name}</TableCell>
+                <TableCell
+                  align="center"
+                  title={product.name}>
+                  <Box
+                    component={'span'}
+                    sx={{
+                      overflow: 'hidden',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 1,
+                      WebkitBoxOrient: 'vertical',
+                      maxWidth: '150px',
+                    }}>
+                    {product.name}
+                  </Box>
+                </TableCell>
                 <TableCell align="center">{convertValues(product.price)}</TableCell>
                 <TableCell align="center">
                   <Chip
