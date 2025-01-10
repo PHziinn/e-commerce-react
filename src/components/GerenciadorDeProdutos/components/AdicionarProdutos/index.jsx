@@ -15,13 +15,15 @@ import {
   Stack,
   TextField,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import { useState } from 'react';
 import { MdClose, MdDelete } from 'react-icons/md';
 import { z } from 'zod';
 import { getProduto } from '../../../../service/api';
 
-const categories = ['RECOMENDADOS', 'MAIS_VENDIDOS'];
+const categories = ['RECOMENDADOS', 'MAIS_VENDIDOS', 'MAIS_PROCURADOS'];
 
 const initialFormData = {
   name: '',
@@ -36,6 +38,8 @@ const initialFormData = {
 
 export const AddProdutosModal = ({ open, onClose, showAlert, onAddProduct }) => {
   const [formData, setFormData] = useState(initialFormData);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const productSchema = z.object({
     name: z.string().min(1, 'Nome do produto é obrigatório'),
@@ -46,6 +50,7 @@ export const AddProdutosModal = ({ open, onClose, showAlert, onAddProduct }) => 
       .refine((val) => !isNaN(parseInt(val)) && parseInt(val) >= 1, 'Estoque deve ser no mínimo 1'),
     description: z.string().min(1, 'Descrição do produto é obrigatória'),
     category: z.string().min(1, 'Categoria é obrigatória'),
+    discount: z.string().min(1, 'Categoria é obrigatória'),
     files: z.array(z.any()).min(1, 'Pelo menos uma imagem é obrigatória'),
   });
 
@@ -237,22 +242,33 @@ export const AddProdutosModal = ({ open, onClose, showAlert, onAddProduct }) => 
             multiline
             rows={3}
           />
-          <TextField
-            label="Categoria"
-            variant="outlined"
-            fullWidth
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            select>
-            {categories.map((cat) => (
-              <MenuItem
-                key={cat}
-                value={cat}>
-                {cat}
-              </MenuItem>
-            ))}
-          </TextField>
+          <Box sx={{ display: 'flex', gap: 2, flexDirection: isMobile ? 'column' : 'row' }}>
+            <TextField
+              label="Categoria"
+              variant="outlined"
+              fullWidth
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              select>
+              {categories.map((cat) => (
+                <MenuItem
+                  key={cat}
+                  value={cat}>
+                  {cat}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              label="Desconto do Produto"
+              variant="outlined"
+              fullWidth
+              name="discount"
+              value={formData.discount}
+              onChange={handleChange}
+              placeholder="Desconto do Produto"
+            />
+          </Box>
         </Stack>
       </DialogContent>
       <Divider />
