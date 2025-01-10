@@ -4,82 +4,6 @@ import { MdOutlineBolt } from 'react-icons/md';
 import { SwiperSlide } from 'swiper/react';
 import { SliderCard } from './../Slide/index';
 
-import ImageOne from '../../../public/produtos/1.png';
-import ImageTwo from '../../../public/produtos/2.png';
-import ImageThee from '../../../public/produtos/3.png';
-import ImageFour from '../../../public/produtos/4.png';
-import ImageFive from '../../../public/produtos/5.png';
-import ImageSix from '../../../public/produtos/6.png';
-import ImageSeven from '../../../public/produtos/7.png';
-import ImageEight from '../../../public/produtos/8.png';
-
-const products = [
-  {
-    id: 1,
-    image: ImageOne,
-    name: 'Fones de Ouvido Sem Fio Bluetooth 5.3, Compatíveis com iPhone e Android',
-    discount: '-25%',
-    price: 10.0,
-    oldPrice: 39.999,
-  },
-  {
-    id: 2,
-    image: ImageTwo,
-    name: 'Power Bank, Carregador Portátil Universal 12.000 mAh, 2 Saídas USB + 1 Saída USB-C, PB12KMB',
-    discount: '-25%',
-    price: 200.0,
-    oldPrice: 39.99,
-  },
-  {
-    id: 3,
-    image: ImageThee,
-    name: 'Cabo USB-C em nylon 1,5 m EUAC 15NB Branco',
-    discount: '-25%',
-    price: 30.0,
-    oldPrice: 39.99,
-  },
-  {
-    id: 4,
-    image: ImageFour,
-    name: 'Suporte de Mesa para Celular Ajustável Articulado Tablet Smartphone (Preto)',
-    discount: '-25%',
-    price: 40.0,
-    oldPrice: 39.99,
-  },
-  {
-    id: 5,
-    image: ImageFive,
-    name: 'Película 5D 9D Ceramica Compatível com Xiaomi Poco X6 Pro',
-    discount: '-25%',
-    price: 50.0,
-    oldPrice: 39.99,
-  },
-  {
-    id: 6,
-    image: ImageSix,
-    name: 'Caneta Touch Screen Ponta Fina Desenho compativel com android e apple',
-    discount: '-25%',
-    price: 60.0,
-    oldPrice: 39.99,
-  },
-  {
-    id: 7,
-    image: ImageSeven,
-    name: 'Lente Câmera Para Celular Melhor Resolução',
-    discount: '-25%',
-    price: 70.0,
-    oldPrice: 39.99,
-  },
-  {
-    id: 8,
-    image: ImageEight,
-    name: 'Echo Pop | Smart speaker compacto com som envolvente e Alexa | Cor Preta',
-    discount: '-25%',
-    price: 80.0,
-    oldPrice: 39.99,
-  },
-];
-
 const settings = {
   spaceBetween: 10,
   slidesPerView: 'auto',
@@ -103,7 +27,7 @@ const settings = {
   },
 };
 
-export const CardProducts = ({ title, hasBorder = true }) => {
+export const CardProducts = ({ title, hasBorder, products }) => {
   return (
     <Box sx={{ padding: 0 }}>
       <Typography
@@ -115,10 +39,9 @@ export const CardProducts = ({ title, hasBorder = true }) => {
       <SliderCard
         settings={settings}
         style={{ width: 'auto' }}>
-        {products.map((product) => (
+        {products?.map((product) => (
           <SwiperSlide key={product.id}>
             <Grid
-              item
               sx={{
                 display: 'flex',
                 alignItems: 'center',
@@ -136,6 +59,7 @@ export const CardProducts = ({ title, hasBorder = true }) => {
                   border: '1px solid #ccc',
                   borderRadius: '8px',
                   padding: '0.7rem',
+                  height: '450px',
                 }}>
                 {hasBorder && (
                   <Chip
@@ -158,9 +82,14 @@ export const CardProducts = ({ title, hasBorder = true }) => {
 
                 <Box
                   component={'img'}
-                  src={product.image}
+                  src={product.imagemUrl}
                   alt={product.name}
-                  style={{ width: '100%', marginBottom: '16px' }}
+                  sx={{
+                    width: '100%',
+                    height: '200px',
+                    objectFit: 'contain',
+                    marginBottom: '16px',
+                  }}
                 />
 
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>

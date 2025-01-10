@@ -1,9 +1,12 @@
 import { Box, Container, useMediaQuery, useTheme } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { CardProducts } from '../../../components/cardProducts';
 import { CarouselList } from '../../../components/carousel';
 import { Footer } from '../../../components/footer';
 import { PrimarySearchBar } from '../../../components/navBarHeader';
-import { styled } from '@mui/material/styles';
+import { getAllProdutos } from '../../../service/api';
 
 const StyledContainer = styled('div')({
   marginTop: '6rem',
@@ -13,6 +16,21 @@ const StyledContainer = styled('div')({
 export const Home = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const [page, setPage] = useState(1);
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['produtos', page],
+    queryFn: () => getAllProdutos(null, page),
+    keepPreviousData: true,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+  });
+
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error loading data...</p>;
+
+  const dataByCategory = data?.dataByCategory;
 
   return (
     <>
@@ -31,16 +49,19 @@ export const Home = () => {
 
           <CardProducts
             title="Mais Vendidos"
-            hasBorder={false}
+            hasBorder={true}
+            products={dataByCategory?.['MAIS_VENDIDOS']}
           />
 
           <CardProducts
             title="Mais Procurados"
             hasBorder={false}
+            products={dataByCategory?.['MAIS_PROCURADOS']}
           />
           <CardProducts
             title="Itens recomendados"
             hasBorder={false}
+            products={dataByCategory?.['RECOMENDADOS']}
           />
         </Box>
       </Container>
