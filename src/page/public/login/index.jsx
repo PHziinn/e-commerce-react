@@ -104,7 +104,6 @@ export const Login = () => {
                   display: 'flex',
                   alignItems: 'center',
                   flexDirection: 'column',
-                  alignItems: 'center',
                   mb: 5,
                 }}>
                 <Avatar sx={{ m: 1, bgcolor: 'black', width: 60, height: 60, fontSize: 50 }}>
