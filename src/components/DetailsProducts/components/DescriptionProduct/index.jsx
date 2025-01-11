@@ -1,21 +1,22 @@
-import { Box, Typography, Tabs, Tab, Grid } from '@mui/material';
+import { Box, Button, Grid2, Typography } from '@mui/material';
 
-export const ProductsInfo = () => {
+export const DescriptionProduct = ({ product }) => {
   return (
     <>
-      <Box sx={{ border: 1, borderColor: 'divider', marginBottom: 2 }}>
-        <Tabs>
-          <Tab
-            sx={{
-              marginLeft: 2,
-              borderBottom: 4,
+      <Box sx={{ border: 1, borderColor: 'divider', marginBottom: 2, mt: 10 }}>
+        <Button
+          sx={{
+            marginLeft: 2,
+            borderBottom: 4,
+            borderColor: '#4169E1',
+            color: '#4169E1',
+            fontWeight: 'bold',
+            '&:hover': {
               borderColor: '#4169E1',
-              color: '#4169E1',
-              fontWeight: 'bold',
-            }}
-            label="Detalhes técnicos"
-          />
-        </Tabs>
+            },
+          }}>
+          Detalhes técnicos
+        </Button>
       </Box>
 
       <Box
@@ -28,15 +29,10 @@ export const ProductsInfo = () => {
         <Typography
           variant="body1"
           sx={{ marginBottom: 3, color: '#555' }}>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repudiandae eligendi nulla eos
-          praesentium omnis dolore non, harum rerum, quia necessitatibus numquam consequatur hic
-          laboriosam quaerat itaque saepe minima odio nihil? Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Suscipit explicabo dignissimos dolorem blanditiis voluptate nostrum,
-          doloribus similique dolor vel nesciunt placeat autem! Consectetur quod voluptatibus culpa
-          dicta amet, odit qui.
+          {product?.description}
         </Typography>
 
-        <Grid
+        <Grid2
           container
           spacing={2}
           sx={{
@@ -46,10 +42,7 @@ export const ProductsInfo = () => {
             overflow: 'hidden',
             boxShadow: '0px 1px 3px rgba(0, 0, 0, 0.1)',
           }}>
-          <Grid
-            item
-            xs={12}
-            md={4}>
+          <Grid2 size={{ xs: 12, md: 4 }}>
             <Typography
               sx={{
                 padding: 1,
@@ -64,12 +57,10 @@ export const ProductsInfo = () => {
             </Typography>
             <Typography sx={{ padding: 1, borderBottom: '1px solid #c1cddf' }}>Tipo</Typography>
             <Typography sx={{ padding: 1, borderBottom: '1px solid #c1cddf' }}>Tamanho</Typography>
-          </Grid>
+          </Grid2>
 
-          <Grid
-            item
-            xs={12}
-            md={8}
+          <Grid2
+            size={{ xs: 12, md: 8 }}
             sx={{ backgroundColor: 'white' }}>
             <Typography
               sx={{
@@ -79,16 +70,16 @@ export const ProductsInfo = () => {
               #87858867
             </Typography>
             <Typography sx={{ padding: 1, borderBottom: '1px solid #c1cddf' }}>
-              ISO-898921212
+              {product?.sku}
             </Typography>
             <Typography sx={{ padding: 1, borderBottom: '1px solid #c1cddf' }}>
-              Película de Vidro 3d
+              {product?.name}
             </Typography>
             <Typography sx={{ padding: 1, borderBottom: '1px solid #c1cddf' }}>
               34mm x 450mm x 19mm
             </Typography>
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
       </Box>
     </>
   );

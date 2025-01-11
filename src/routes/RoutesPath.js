@@ -33,7 +33,7 @@ export const PrivateRoutesPath = {
 
 export const RoutesPath = {
   '/': Home,
-  '/produto': DetailsProducts,
+  '/produto/:id': DetailsProducts,
   '/produtos/search/produto': SearchProducts,
   '/login': Login,
   '/cadastrar': SignUp,

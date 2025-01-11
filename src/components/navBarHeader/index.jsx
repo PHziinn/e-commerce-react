@@ -21,13 +21,15 @@ import {
   MdLogout,
   MdOutlineShoppingCart,
 } from 'react-icons/md';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import TechDev from '../../../public/logoWhite.svg';
 import { useUser } from '../../context/authContext';
+import { selectProductsCount } from '../../redux-store/redux-actions/Cart/cart.Selectors';
 import { getAllSettings, getByUsuario } from '../../service/api';
 import { SearchResult } from '../Search';
-import { CarrinhdoDeCompras } from './components/carrinhoDeCompras';
+import { CarrinhoDeCompras } from './components/carrinhoDeCompras';
 import { FeedAnuncio } from './components/FeedAnuncio';
 
 export const PrimarySearchBar = () => {
@@ -35,13 +37,15 @@ export const PrimarySearchBar = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
 
-  const [cartOpen, setCartOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(null);
   const [messageSocket, setMessageSocket] = useState();
   const [isFeedAnuncio, setIsFeedAnuncio] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [scrollY, setScrollY] = useState(0);
   const { user, signOut } = useUser();
+
+  const ProductsCount = useSelector(selectProductsCount);
 
   const { data } = useQuery({
     queryKey: ['settings'],
@@ -105,6 +109,7 @@ export const PrimarySearchBar = () => {
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
+    setCartOpen(false);
   };
 
   const handleMenuClose = () => {
@@ -285,7 +290,7 @@ export const PrimarySearchBar = () => {
                     sx={{ mr: 2 }}
                     onClick={() => setCartOpen(!cartOpen)}>
                     <Badge
-                      badgeContent={3}
+                      badgeContent={ProductsCount}
                       color="error"
                       sx={{
                         '& .MuiBadge-badge': {
@@ -304,7 +309,7 @@ export const PrimarySearchBar = () => {
                 )}
               </Box>
 
-              <CarrinhdoDeCompras cartOpen={cartOpen} />
+              <CarrinhoDeCompras cartOpen={cartOpen} />
             </Box>
           </Toolbar>
         </AppBar>

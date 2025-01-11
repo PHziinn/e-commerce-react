@@ -15,6 +15,11 @@ export async function getAllProdutos(name, page) {
 
   return response.data;
 }
+export async function getByProdutos(id) {
+  const response = await axiosClient.get(`/produtos/${id}`);
+
+  return response.data;
+}
 export async function getProduto(sku) {
   const response = await axiosClient.get(`/produtos/${sku}`);
 

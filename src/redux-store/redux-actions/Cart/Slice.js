@@ -39,7 +39,6 @@ const loadState = () => {
   }
 };
 
-// // Exemplo de uso: Carregar o estado persistido
 const persistedState = loadState() || { products: [] };
 
 const cartSlice = createSlice({
@@ -54,11 +53,14 @@ const cartSlice = createSlice({
       if (productIsAlreadyInCart) {
         state.products = state.products.map((product) =>
           product.id === action.payload.id
-            ? { ...product, quantity: product.quantity + 1 }
+            ? { ...product, quantity: product.quantity + action.payload.quantity || 1 }
             : product
         );
       } else {
-        state.products = [...state.products, { ...action.payload, quantity: 1 }];
+        state.products = [
+          ...state.products,
+          { ...action.payload, quantity: action.payload.quantity || 1 },
+        ];
       }
       saveState(state);
     },

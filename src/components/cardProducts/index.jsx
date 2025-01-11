@@ -1,7 +1,9 @@
-import { Button, Grid, Chip, Typography, Box } from '@mui/material';
-import { MdOutlineAddShoppingCart, MdOutlineShoppingCart } from 'react-icons/md';
-import { MdOutlineBolt } from 'react-icons/md';
+import { Box, Button, Chip, Grid2, Typography } from '@mui/material';
+import { MdOutlineAddShoppingCart, MdOutlineBolt, MdOutlineShoppingCart } from 'react-icons/md';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { SwiperSlide } from 'swiper/react';
+import { addProduct } from '../../redux-store/redux-actions/Cart/Slice';
 import { SliderCard } from './../Slide/index';
 
 const settings = {
@@ -28,6 +30,14 @@ const settings = {
 };
 
 export const CardProducts = ({ title, hasBorder, products }) => {
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
+  const handleProductClick = (product) => {
+    dispatch(addProduct(product));
+  };
+
   return (
     <Box sx={{ padding: 0 }}>
       <Typography
@@ -41,7 +51,7 @@ export const CardProducts = ({ title, hasBorder, products }) => {
         style={{ width: 'auto' }}>
         {products?.map((product) => (
           <SwiperSlide key={product.id}>
-            <Grid
+            <Grid2
               sx={{
                 display: 'flex',
                 alignItems: 'center',
@@ -59,7 +69,7 @@ export const CardProducts = ({ title, hasBorder, products }) => {
                   border: '1px solid #ccc',
                   borderRadius: '8px',
                   padding: '0.7rem',
-                  height: '450px',
+                  height: hasBorder ? '450px' : '400px',
                 }}>
                 {hasBorder && (
                   <Chip
@@ -163,7 +173,7 @@ export const CardProducts = ({ title, hasBorder, products }) => {
 
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <Button
-                    href="#"
+                    onClick={() => navigate(`/produto/${product.id}`)}
                     variant="contained"
                     sx={{
                       boxShadow: 'none',
@@ -181,8 +191,8 @@ export const CardProducts = ({ title, hasBorder, products }) => {
                     Comprar
                   </Button>
                   <Button
-                    href="#"
                     variant="contained"
+                    onClick={() => handleProductClick(product)}
                     sx={{
                       boxShadow: 'none',
                       backgroundColor: 'black',
@@ -209,7 +219,7 @@ export const CardProducts = ({ title, hasBorder, products }) => {
                   </Button>
                 </Box>
               </Box>
-            </Grid>
+            </Grid2>
           </SwiperSlide>
         ))}
       </SliderCard>

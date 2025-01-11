@@ -1,29 +1,32 @@
 import { Box, Button, Divider, List, ListItem, ListItemAvatar, Typography } from '@mui/material';
 import { AiOutlineDelete, AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectProductsTotalPrice } from '../../../../redux-store/redux-actions/Cart/cart.Selectors';
+import {
+  decreseProductQuatity,
+  increaseProductQuantity,
+  removeProduct,
+} from '../../../../redux-store/redux-actions/Cart/Slice';
+import { useConvertValues } from '../../../../utils/ConvertValues';
 
-export const CarrinhdoDeCompras = ({ cartOpen }) => {
-  const cartItems = [
-    {
-      id: 1,
-      name: 'Cabo USB-C em nylon 1,5 m EUAC 15NB Branco',
-      price: 50,
-      image: '../../../public/produtos/3.png',
-    },
-    {
-      id: 2,
-      name: 'Suporte de Mesa para Celular Ajustável Articulado Tablet Smartphone (Preto)',
-      price: 75,
-      image: '../../../public/produtos/4.png',
-    },
-    {
-      id: 3,
-      name: 'Película 5D 9D Ceramica Compatível com Xiaomi Poco X6 Pro',
-      price: 75,
-      image: '../../../public/produtos/5.png',
-    },
-  ];
+export const CarrinhoDeCompras = ({ cartOpen }) => {
+  const dispatch = useDispatch();
+  const { products } = useSelector((rootReducer) => rootReducer.cartReducer);
+  const { convertValues } = useConvertValues();
 
-  const totalPrice = cartItems.reduce((acc, item) => acc + item.price, 0);
+  const totalPrice = useSelector(selectProductsTotalPrice);
+
+  const handleIncreaseClick = (productId) => {
+    dispatch(increaseProductQuantity(productId));
+  };
+
+  const handleDecreaseClick = (productId) => {
+    dispatch(decreseProductQuatity(productId));
+  };
+
+  const handleRemoveClick = (productId) => {
+    dispatch(removeProduct(productId));
+  };
 
   return (
     <>
@@ -34,7 +37,7 @@ export const CarrinhdoDeCompras = ({ cartOpen }) => {
             top: '60px',
             right: 0,
             width: 370,
-            maxHeight: 450,
+            maxHeight: 460,
             background: 'white',
             border: '1px solid #e0e0e0',
             boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
@@ -46,22 +49,22 @@ export const CarrinhdoDeCompras = ({ cartOpen }) => {
             sx={{
               maxHeight: 350,
               overflowY: 'auto',
-              padding: 2,
+              padding: 1,
             }}>
             <List>
-              {cartItems.map((item) => (
+              {products.map((item) => (
                 <Box key={item.id}>
-                  <ListItem sx={{ paddingLeft: 0, paddingRight: 0 }}>
+                  <ListItem sx={{ paddingLeft: 0, paddingRight: 1 }}>
                     <ListItemAvatar>
                       <Box
                         component={'img'}
-                        src={item.image}
+                        src={item.imagemUrl}
                         alt={item.name}
                         sx={{
                           borderRadius: 2,
-                          width: 85,
-                          height: 65,
-                          objectFit: 'contain',
+                          width: 90,
+                          height: 70,
+                          objectFit: 'scale-down',
                         }}
                       />
                     </ListItemAvatar>
@@ -80,13 +83,16 @@ export const CarrinhdoDeCompras = ({ cartOpen }) => {
                           gap: 1,
                         }}>
                         <AiOutlineDelete
+                          onClick={() => handleRemoveClick(item.id)}
                           style={{
                             fontSize: '22px',
                             cursor: 'pointer',
                             color: 'red',
                           }}
                         />
-                        <Typography sx={{ fontSize: '14px' }}>{item.name}</Typography>
+                        <Typography sx={{ fontSize: '14px', mt: 1, mb: 1, ml: 1 }}>
+                          {item.name}
+                        </Typography>
                       </Box>
                       <Box
                         sx={{
@@ -102,13 +108,15 @@ export const CarrinhdoDeCompras = ({ cartOpen }) => {
                             gap: 1,
                           }}>
                           <AiOutlineMinus
+                            onClick={() => handleDecreaseClick(item.id)}
                             style={{
                               fontSize: '22px',
                               cursor: 'pointer',
                             }}
                           />
-                          <Typography sx={{ fontSize: '15px' }}>10</Typography>
+                          <Typography sx={{ fontSize: '15px' }}>{item.quantity}</Typography>
                           <AiOutlinePlus
+                            onClick={() => handleIncreaseClick(item.id)}
                             style={{
                               fontSize: '22px',
                               cursor: 'pointer',
@@ -121,7 +129,7 @@ export const CarrinhdoDeCompras = ({ cartOpen }) => {
                             fontSize: '15px',
                             fontWeight: 'bold',
                           }}>
-                          {`R$ ${item.price.toFixed(2)}`}
+                          {convertValues(item.price)}
                         </Typography>
                       </Box>
                     </Box>
@@ -138,7 +146,7 @@ export const CarrinhdoDeCompras = ({ cartOpen }) => {
               background: '#f9f9f9',
             }}>
             <Typography sx={{ mb: 1, fontSize: '18px', fontWeight: 'bold' }}>
-              Total: R$ {totalPrice.toFixed(2)}
+              Total: {convertValues(totalPrice)}
             </Typography>
             <Button
               variant="contained"
@@ -155,7 +163,7 @@ export const CarrinhdoDeCompras = ({ cartOpen }) => {
                   boxShadow: 'none',
                 },
               }}
-              onClick={() => alert('Checkout iniciado!')}>
+              onClick={() => alert('Checkout Em Breve!')}>
               Finalizar Compra
             </Button>
           </Box>
