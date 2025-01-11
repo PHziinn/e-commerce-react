@@ -1,7 +1,7 @@
-import { Box, Container, useMediaQuery, useTheme } from '@mui/material';
+import { Box, CircularProgress, Container, useMediaQuery, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CardProducts } from '../../../components/cardProducts';
 import { CarouselList } from '../../../components/carousel';
 import { Footer } from '../../../components/footer';
@@ -19,7 +19,7 @@ export const Home = () => {
 
   const [page, setPage] = useState(1);
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['produtos', page],
     queryFn: () => getAllProdutos(null, page),
     keepPreviousData: true,
@@ -27,10 +27,25 @@ export const Home = () => {
     refetchOnReconnect: true,
   });
 
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>Error loading data...</p>;
-
   const dataByCategory = data?.dataByCategory;
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  if (isLoading)
+    return (
+      <Box
+        sx={{
+          width: '100vw',
+          height: '100vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <CircularProgress />
+      </Box>
+    );
 
   return (
     <>
