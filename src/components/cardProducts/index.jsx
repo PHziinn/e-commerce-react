@@ -193,7 +193,10 @@ export const CardProducts = ({ title, hasBorder, products }) => {
                   </Button>
                   <Button
                     variant="contained"
-                    onClick={() => handleProductClick(product)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleProductClick(product);
+                    }}
                     sx={{
                       boxShadow: 'none',
                       backgroundColor: 'black',
