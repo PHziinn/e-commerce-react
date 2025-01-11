@@ -58,6 +58,7 @@ export const CardProducts = ({ title, hasBorder, products }) => {
                 justifyItems: 'center',
               }}>
               <Box
+                onClick={() => navigate(`/produto/${product.id}`)}
                 key={product.id}
                 sx={{
                   position: 'relative',
