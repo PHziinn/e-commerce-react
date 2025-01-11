@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import { AlertNotification } from '../../../components/AlertNotification';
 import { AuthContext } from '../../../context/authContext';
 import { useAlert } from '../../../hooks/useShowAlert';
+import { PrimarySearchBar } from '../../../components/navBarHeader';
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -69,12 +70,12 @@ export const Login = () => {
       <Container
         component="main"
         maxWidth="xs">
+        <PrimarySearchBar />
         <CssBaseline />
         <AlertNotification
           closeAlert={closeAlert}
           alert={alert}
         />
-
         <Box
           sx={{
             minHeight: '100dvh',

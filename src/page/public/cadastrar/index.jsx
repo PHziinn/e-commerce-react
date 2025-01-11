@@ -21,6 +21,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AlertNotification } from '../../../components/AlertNotification';
 import { createUsuario } from '../../../service/api';
 import { useAlert } from '../../../hooks/useShowAlert';
+import { PrimarySearchBar } from '../../../components/navBarHeader';
 
 export const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -69,6 +70,7 @@ export const SignUp = () => {
       <Container
         component="main"
         maxWidth="xs">
+        <PrimarySearchBar />
         <CssBaseline />
         <AlertNotification
           closeAlert={closeAlert}
@@ -184,7 +186,7 @@ export const SignUp = () => {
               sx={{
                 mt: 3,
                 mb: 2,
-                marginTop: 5,
+                marginTop: 3,
                 background: '#000000',
                 transition: 'background-color 0.3s',
                 ':hover': { backgroundColor: '#282828', color: '#fff', boxShadow: 'none' },
