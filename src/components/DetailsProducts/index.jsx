@@ -16,7 +16,7 @@ import { useEffect, useState } from 'react';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 import { MdOutlineAddShoppingCart, MdOutlineClose, MdOutlineShoppingCart } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { SwiperSlide } from 'swiper/react';
 import { addProduct } from '../../redux-store/redux-actions/Cart/Slice';
 import { getByProdutos } from '../../service/api';
@@ -35,6 +35,7 @@ export const ProductDetails = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { convertValues } = useConvertValues();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [quantity, setQuantity] = useState(1);
   const { id } = useParams();
@@ -188,7 +189,7 @@ export const ProductDetails = () => {
                     sx={{ fontSize: '15px', mb: '30px' }}>
                     À vista no PIX com até
                     <Chip
-                      label={`${data?.product?.discount} OFF`}
+                      label={`${data?.product?.discount}% OFF`}
                       sx={{
                         backgroundColor: '#1C1C1C',
                         color: 'white',
@@ -281,6 +282,10 @@ export const ProductDetails = () => {
               <Button
                 variant="contained"
                 disabled={data?.product?.statusEstoque === 'ESGOTADO'}
+                onClick={() => {
+                  navigate(`/resumo-do-pedidos`);
+                  handleProductClick(data?.product);
+                }}
                 sx={{
                   boxshadow: 'none',
                   color: '#fff',

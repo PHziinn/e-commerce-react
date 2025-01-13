@@ -5,13 +5,14 @@ import { AdminUsuarios } from '../page/admin/usuarios';
 import { Profile } from '../page/private/profile';
 import { SignUp } from '../page/public/cadastrar';
 import { DetailsProducts } from '../page/public/detailsProduct';
+import { FalhaPagamento } from '../page/public/FalhaPagamento';
 import { Home } from '../page/public/home';
 import { Login } from '../page/public/login';
 import { MaintenancePage } from '../page/public/maintenance';
 import { NotFound } from '../page/public/notFound';
-import { PaginaRestritaMobiles } from '../page/public/PaginaRestritaMobiles';
-import { FalhaPagamento } from '../page/public/FalhaPagamento';
 import { PagamentoConcluido } from '../page/public/PagamentoConcluido';
+import { PaginaRestritaMobiles } from '../page/public/PaginaRestritaMobiles';
+import { ResumoPedido } from '../page/private/resumoPedido';
 import { SearchProducts } from '../page/public/searchProduto';
 import { Unauthorized } from '../page/public/unauthorized';
 
@@ -29,6 +30,7 @@ export const MaintenancePath = {
 
 export const PrivateRoutesPath = {
   '/perfil': Profile,
+  '/resumo-do-pedidos': ResumoPedido,
 };
 
 export const RoutesPath = {
@@ -39,7 +41,7 @@ export const RoutesPath = {
   '/cadastrar': SignUp,
   '/unauthorized': Unauthorized,
   '/restricted': PaginaRestritaMobiles,
-  '/pagamentoConcluido': PagamentoConcluido,
-  '/falhaPagamento': FalhaPagamento,
+  '/pagamento-concluido': PagamentoConcluido,
+  '/falha-pagamento': FalhaPagamento,
   '/*': NotFound,
 };

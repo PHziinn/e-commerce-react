@@ -8,9 +8,11 @@ import {
   removeProduct,
 } from '../../../../redux-store/redux-actions/Cart/Slice';
 import { useConvertValues } from '../../../../utils/ConvertValues';
+import { useNavigate } from 'react-router-dom';
 
 export const CarrinhoDeCompras = ({ cartOpen }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { products } = useSelector((rootReducer) => rootReducer.cartReducer);
   const { convertValues } = useConvertValues();
 
@@ -163,7 +165,9 @@ export const CarrinhoDeCompras = ({ cartOpen }) => {
                   boxShadow: 'none',
                 },
               }}
-              onClick={() => alert('Checkout Em Breve!')}>
+              onClick={() => {
+                navigate(`/resumo-do-pedidos`);
+              }}>
               Finalizar Compra
             </Button>
           </Box>
