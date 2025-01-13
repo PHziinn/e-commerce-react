@@ -4,11 +4,11 @@ import { styled } from '@mui/material/styles';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { MdAddShoppingCart, MdOutlineManageSearch } from 'react-icons/md';
+import { useAlert } from '../../hooks/useShowAlert';
 import { deleteProdutos, getAllProdutos, patchProdutos, postProdutos } from '../../service/api';
 import { AlertNotification } from '../AlertNotification';
-import { AddProdutosModal } from './components/AdicionarProdutos';
+import { ModalProduto } from './components/ModalProduto';
 import { TabelaDeProdutos } from './components/TabelaDeProdutos';
-import { useAlert } from '../../hooks/useShowAlert';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -71,7 +71,7 @@ export const GerenciadorDeProdutos = () => {
     refetchOnReconnect: true,
   });
 
-  const addProdutoMutation = useMutation({
+  const { mutate: addProdutoMutation, isPending: isAddPending } = useMutation({
     mutationFn: postProdutos,
     onSuccess: () => {
       client.invalidateQueries(['produtos']);
@@ -82,7 +82,7 @@ export const GerenciadorDeProdutos = () => {
     },
   });
 
-  const editProdutoMutation = useMutation({
+  const { mutate: editProdutoMutation, isPending: isEditPending } = useMutation({
     mutationFn: (data) => patchProdutos(data.id, data.dataProduto),
     onSuccess: () => {
       client.invalidateQueries(['produtos']);
@@ -117,7 +117,7 @@ export const GerenciadorDeProdutos = () => {
       }
     });
 
-    addProdutoMutation.mutate(formData);
+    addProdutoMutation(formData);
   };
 
   const handleEditProduto = (updatedProduto) => {
@@ -132,7 +132,7 @@ export const GerenciadorDeProdutos = () => {
       }
     });
 
-    editProdutoMutation.mutate({ id, dataProduto: formData });
+    editProdutoMutation({ id, dataProduto: formData });
   };
 
   const handleDeleteProduto = (id) => {
@@ -180,11 +180,13 @@ export const GerenciadorDeProdutos = () => {
           }}>
           <MdAddShoppingCart style={{ fontSize: '26px' }} />
         </Fab>
-        <AddProdutosModal
+
+        <ModalProduto
           open={isModalOpen}
           onClose={() => setModalOpen(false)}
-          onAddProduct={handleAddProduto}
+          onSave={handleAddProduto}
           showAlert={showAlert}
+          isPending={isAddPending}
         />
       </Box>
 
@@ -194,6 +196,8 @@ export const GerenciadorDeProdutos = () => {
         isError={isError}
         onEdit={handleEditProduto}
         onDelete={handleDeleteProduto}
+        isPending={isEditPending}
+        showAlert={showAlert}
       />
 
       <Box

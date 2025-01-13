@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Box,
   Chip,
   CircularProgress,
@@ -17,13 +16,22 @@ import { useState } from 'react';
 import { MdDelete, MdModeEdit } from 'react-icons/md';
 import { useConvertValues, useFormatNumber } from '../../../../utils/ConvertValues';
 import { ConfirmDelete } from '../../../ConfirmDelete';
-import { EditProdutosModal } from '../EditalProdutosModal';
+
+import { ModalProduto } from '../ModalProduto';
 
 const statusColors = {
   DISPONIVEL: '#56a733',
   ESGOTADO: '#d32f2f',
 };
-export const TabelaDeProdutos = ({ data, isLoading, isError, onDelete, onEdit }) => {
+export const TabelaDeProdutos = ({
+  data,
+  isLoading,
+  isPending,
+  isError,
+  onDelete,
+  onEdit,
+  showAlert,
+}) => {
   const produtos = data?.data;
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [selectedProdutos, setSelectedProdutos] = useState(null);
@@ -95,10 +103,11 @@ export const TabelaDeProdutos = ({ data, isLoading, isError, onDelete, onEdit })
             {produtos?.map((product) => (
               <TableRow key={product.id}>
                 <TableCell>
-                  <Avatar
-                    src={product.imagemUrl?.split(',')[0]?.trim()}
+                  <Box
+                    component={'img'}
+                    src={product.imagens[0].url}
                     alt={product.name}
-                    sx={{ width: 60, height: 60, borderRadius: '5px' }}
+                    sx={{ width: 60, height: 60, borderRadius: '5px', objectFit: 'scale-down' }}
                   />
                 </TableCell>
                 <TableCell align="center">{product.sku}</TableCell>
@@ -201,11 +210,15 @@ export const TabelaDeProdutos = ({ data, isLoading, isError, onDelete, onEdit })
           </TableBody>
         </Table>
       </TableContainer>
-      <EditProdutosModal
+
+      <ModalProduto
+        produto={selectedProdutos}
         open={isEditModalOpen}
         onClose={() => setEditModalOpen(false)}
-        produtos={selectedProdutos}
         onSave={handleSaveEditProduto}
+        showAlert={showAlert}
+        isPending={isPending}
+        isEditMode
       />
 
       <ConfirmDelete
