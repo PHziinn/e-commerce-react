@@ -74,7 +74,7 @@ export const CardProducts = ({ title, hasBorder, products }) => {
                 }}>
                 {hasBorder && (
                   <Chip
-                    label={product.discount}
+                    label={`${product.discount}%`}
                     sx={{
                       position: 'absolute',
                       top: '10px',
@@ -93,7 +93,7 @@ export const CardProducts = ({ title, hasBorder, products }) => {
 
                 <Box
                   component={'img'}
-                  src={product.imagemUrl}
+                  src={product?.imagens[0].url}
                   alt={product.name}
                   sx={{
                     width: '100%',
@@ -183,8 +183,13 @@ export const CardProducts = ({ title, hasBorder, products }) => {
                       transition: 'background-color 0.3s',
                       width: '90%',
                       '&:hover': {
-                        backgroundColor: '#D3D3D3',
-                        color: 'black',
+                        backgroundColor: '#282828',
+                        color: '#fff',
+                        boxShadow: 'none',
+                      },
+                      '&:active': {
+                        backgroundColor: '#282828',
+                        color: '#fff',
                         boxShadow: 'none',
                       },
                     }}>
@@ -204,8 +209,13 @@ export const CardProducts = ({ title, hasBorder, products }) => {
                       borderRadius: '0 4px 4px 0',
                       transition: 'background-color 0.3s',
                       '&:hover': {
-                        backgroundColor: '#D3D3D3',
-                        color: 'black',
+                        backgroundColor: '#282828',
+                        color: '#fff',
+                        boxShadow: 'none',
+                      },
+                      '&:active': {
+                        backgroundColor: '#282828',
+                        color: '#fff',
                         boxShadow: 'none',
                       },
                       '&::before': {

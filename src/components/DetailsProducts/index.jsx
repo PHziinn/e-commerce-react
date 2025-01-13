@@ -17,10 +17,18 @@ import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 import { MdOutlineAddShoppingCart, MdOutlineClose, MdOutlineShoppingCart } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { SwiperSlide } from 'swiper/react';
 import { addProduct } from '../../redux-store/redux-actions/Cart/Slice';
 import { getByProdutos } from '../../service/api';
 import { useConvertValues } from '../../utils/ConvertValues';
+import { SliderCard } from '../Slide';
 import { DescriptionProduct } from './components/DescriptionProduct';
+
+const settings = {
+  spaceBetween: 10,
+  slidesPerView: 'auto',
+  pagination: { clickable: true },
+};
 
 export const ProductDetails = () => {
   const theme = useTheme();
@@ -59,12 +67,12 @@ export const ProductDetails = () => {
     }
   };
 
-  const handleDecreaseClick = (productId) => {
+  const handleDecreaseClick = () => {
     const updatedQuantity = quantity > 1 ? quantity - 1 : 1;
     setQuantity(updatedQuantity);
   };
 
-  const handleIncreaseClick = (productId) => {
+  const handleIncreaseClick = () => {
     const updatedQuantity = quantity + 1;
     setQuantity(updatedQuantity);
   };
@@ -99,16 +107,27 @@ export const ProductDetails = () => {
                   }}
                 />
               ) : (
-                <Box
-                  component="img"
-                  src={data?.product?.imagemUrl}
-                  alt={data?.product?.name}
-                  sx={{
-                    width: '100%',
-                    maxHeight: isMobile ? '350px' : '500px',
-                    objectFit: 'scale-down',
-                  }}
-                />
+                <>
+                  <SliderCard
+                    settings={settings}
+                    style={{ width: '100%', height: 'auto' }}>
+                    {data?.product?.imagens.map((image, index) => (
+                      <SwiperSlide key={index}>
+                        <Box
+                          component="img"
+                          src={image.url}
+                          alt={data?.product?.name}
+                          sx={{
+                            width: '100%',
+                            maxHeight: isMobile ? '350px' : '500px',
+                            objectFit: 'scale-down',
+                            marginBottom: 3,
+                          }}
+                        />
+                      </SwiperSlide>
+                    ))}
+                  </SliderCard>
+                </>
               )}
             </Grid2>
             <Grid2 size={{ xs: 12, md: 6 }}>
@@ -271,7 +290,12 @@ export const ProductDetails = () => {
                   width: '100%',
                   mb: 3,
                   transition: 'background-color 0.3s',
-                  '&:hover': { backgroundColor: '#282828', color: 'white', boxShadow: 'none' },
+                  '&:hover': { backgroundColor: '#282828', color: '#fff', boxShadow: 'none' },
+                  '&:active': {
+                    backgroundColor: '#282828',
+                    color: '#fff',
+                    boxShadow: 'none',
+                  },
                 }}>
                 <MdOutlineShoppingCart style={{ fontSize: '1.4rem', marginRight: 7 }} />
                 Comprar
@@ -289,6 +313,11 @@ export const ProductDetails = () => {
                   fontWeight: 'bold',
                   transition: 'background-color 0.3s',
                   '&:hover': { backgroundColor: '#a9a9a9', color: 'black', boxShadow: 'none' },
+                  '&:active': {
+                    backgroundColor: '#a9a9a9',
+                    color: 'black',
+                    boxShadow: 'none',
+                  },
                 }}>
                 <MdOutlineAddShoppingCart style={{ fontSize: '1.4rem', marginRight: 7 }} />
                 Adicionar no carrinho

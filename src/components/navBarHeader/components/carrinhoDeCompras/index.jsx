@@ -58,7 +58,7 @@ export const CarrinhoDeCompras = ({ cartOpen }) => {
                     <ListItemAvatar>
                       <Box
                         component={'img'}
-                        src={item.imagemUrl}
+                        src={item.imagens[0].url}
                         alt={item.name}
                         sx={{
                           borderRadius: 2,
