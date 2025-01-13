@@ -32,7 +32,6 @@ const statusEstoque = ['DISPONIVEL', 'ESGOTADO'];
 
 const settings = {
   spaceBetween: 10,
-  slidesPerView: 1,
   slidesPerView: 'auto',
   pagination: { clickable: true },
 };
@@ -115,7 +114,6 @@ export const ModalProduto = ({
     canvas.width = width;
     canvas.height = height;
 
-    // Adiciona um fundo transparente ou branco
     ctx.fillStyle = 'transparent';
     ctx.fillRect(0, 0, width, height);
 
