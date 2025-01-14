@@ -58,8 +58,8 @@ export async function getAllUsuarios(name, page) {
 
   return response.data;
 }
-export async function getByUsuario(id) {
-  const response = await axiosClient.get(`/usuarios/${id}`);
+export async function getByUsuario(id, page) {
+  const response = await axiosClient.get(`/usuarios/${id}?page=${page}`);
 
   return response.data;
 }

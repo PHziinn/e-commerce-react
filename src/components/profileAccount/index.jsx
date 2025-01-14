@@ -51,8 +51,8 @@ export const ProfileAccount = () => {
   };
 
   const { data: userData } = useQuery({
-    queryKey: ['usuarios', user?.id],
-    queryFn: () => getByUsuario(user?.id),
+    queryKey: ['usuarios', user?.id, page],
+    queryFn: () => getByUsuario(user?.id, page),
     enabled: !!user?.id,
     keepPreviousData: true,
     refetchOnWindowFocus: true,
@@ -470,17 +470,17 @@ export const ProfileAccount = () => {
         display="flex"
         justifyContent="flex-end"
         mt={3}>
-        {userData?.length === 0 && userData?.totalPages !== 1 && (
-          <Pagination
-            count={userData?.totalPages || 1}
-            page={page}
-            onChange={handlePageChange}
-            color="primary"
-            variant="outlined"
-            showFirstButton
-            showLastButton
-          />
-        )}
+        {/* {userData?.totalPages !== 1 && ( */}
+        <Pagination
+          count={userData?.totalPages || 1}
+          page={page}
+          onChange={handlePageChange}
+          color="primary"
+          variant="outlined"
+          showFirstButton
+          showLastButton
+        />
+        {/* )} */}
       </Box>
     </Container>
   );

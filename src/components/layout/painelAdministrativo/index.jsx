@@ -46,8 +46,8 @@ export const PainelAdministrativo = ({ children }) => {
   const { user, signOut } = useUser();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['usuarios', user.id],
-    queryFn: () => getByUsuario(user.id),
+    queryKey: ['usuarios', user.id, 1],
+    queryFn: () => getByUsuario(user.id, 1),
     enabled: !!user.id,
     keepPreviousData: true,
     refetchOnWindowFocus: true,
