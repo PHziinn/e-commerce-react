@@ -74,6 +74,7 @@ export const ResumoDePedidos = () => {
           <OrderSummary
             total={totalPrice}
             handleAddProduto={handleAddProduto}
+            isPending={isPaymentPending}
           />
         </Grid2>
       </Grid2>

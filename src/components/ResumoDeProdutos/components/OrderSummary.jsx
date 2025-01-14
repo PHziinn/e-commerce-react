@@ -1,9 +1,9 @@
 import React from 'react';
-import { Paper, Typography, Button, Box, Divider } from '@mui/material';
+import { Paper, Typography, Button, Box, Divider, CircularProgress } from '@mui/material';
 import { useConvertValues } from '../../../utils/ConvertValues';
 import { useNavigate } from 'react-router-dom';
 
-export const OrderSummary = ({ total, handleAddProduto }) => {
+export const OrderSummary = ({ total, handleAddProduto, isPending }) => {
   const { convertValues } = useConvertValues();
   const navigate = useNavigate();
 
@@ -50,7 +50,16 @@ export const OrderSummary = ({ total, handleAddProduto }) => {
               boxShadow: 'none',
             },
           }}>
-          Finalizar Compra
+          {isPending ? (
+            <CircularProgress
+              sx={{
+                color: '#fff',
+              }}
+              size={24}
+            />
+          ) : (
+            'Finalizar Compra'
+          )}
         </Button>
         <Button
           onClick={() => {
