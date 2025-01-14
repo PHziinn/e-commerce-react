@@ -32,7 +32,7 @@ import { SearchResult } from '../Search';
 import { CarrinhoDeCompras } from './components/carrinhoDeCompras';
 import { FeedAnuncio } from './components/FeedAnuncio';
 
-export const PrimarySearchBar = () => {
+export const PrimarySearchBar = ({ isFeedAnuncioActive }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
@@ -331,10 +331,12 @@ export const PrimarySearchBar = () => {
           <SearchResult />
         </Box>
       </AppBar>
-      <FeedAnuncio
-        isFeedAnuncio={isFeedAnuncio && scrollY < 100}
-        message={messageSocket}
-      />
+      {!isFeedAnuncioActive && (
+        <FeedAnuncio
+          isFeedAnuncio={isFeedAnuncio && scrollY < 100}
+          message={messageSocket}
+        />
+      )}
     </>
   );
 };

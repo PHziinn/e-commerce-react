@@ -70,7 +70,7 @@ export const SignUp = () => {
       <Container
         component="main"
         maxWidth="xs">
-        <PrimarySearchBar />
+        <PrimarySearchBar isFeedAnuncioActive />
         <CssBaseline />
         <AlertNotification
           closeAlert={closeAlert}
@@ -194,7 +194,7 @@ export const SignUp = () => {
               {addCreateUsuario.isPending ? (
                 <CircularProgress
                   sx={{
-                    color: '#000000',
+                    color: '#fff',
                   }}
                   size={24}
                 />

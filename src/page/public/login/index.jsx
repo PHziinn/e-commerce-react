@@ -70,7 +70,7 @@ export const Login = () => {
       <Container
         component="main"
         maxWidth="xs">
-        <PrimarySearchBar />
+        <PrimarySearchBar isFeedAnuncioActive />
         <CssBaseline />
         <AlertNotification
           closeAlert={closeAlert}
