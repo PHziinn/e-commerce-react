@@ -109,3 +109,10 @@ export async function fetchAddressByCep(cep) {
 
   return response.data;
 }
+
+// Pagemento
+export async function payment(payment) {
+  const response = await axiosClient.post(`/carrinhos`, payment);
+
+  return response.data;
+}

@@ -3,7 +3,7 @@ import { Paper, Typography, Button, Box, Divider } from '@mui/material';
 import { useConvertValues } from '../../../utils/ConvertValues';
 import { useNavigate } from 'react-router-dom';
 
-export const OrderSummary = ({ total }) => {
+export const OrderSummary = ({ total, handleAddProduto }) => {
   const { convertValues } = useConvertValues();
   const navigate = useNavigate();
 
@@ -34,6 +34,7 @@ export const OrderSummary = ({ total }) => {
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
         <Button
           variant="contained"
+          onClick={() => handleAddProduto()}
           fullWidth
           sx={{
             boxshadow: 'none',
