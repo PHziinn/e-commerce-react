@@ -1,14 +1,30 @@
 import { Box, Button, Typography } from '@mui/material';
+import { useEffect } from 'react';
 import { FcCancel } from 'react-icons/fc';
-import { Navigate, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export const FalhaPagamento = () => {
   const location = useLocation();
-  const fromInternal = location.state?.from === 'internal';
+  const navigate = useNavigate();
 
-  if (!fromInternal) {
-    return <Navigate to="/" />;
-  }
+  const sessionId = new URLSearchParams(location.search).get('session_id');
+
+  useEffect(() => {
+    if (sessionId) {
+      const userIdLocalStorage = localStorage.getItem('@Auth:user');
+
+      if (userIdLocalStorage) {
+        const userData = JSON.parse(userIdLocalStorage);
+        const userId = userData.id;
+
+        if (userId) {
+          localStorage.removeItem(`cartState_${userId}`);
+        }
+      }
+    } else {
+      navigate('/');
+    }
+  }, [sessionId, navigate]);
 
   return (
     <Box component="main">
