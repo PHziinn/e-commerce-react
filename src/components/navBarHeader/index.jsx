@@ -7,6 +7,7 @@ import {
   ListItemIcon,
   Menu,
   MenuItem,
+  Skeleton,
   Toolbar,
   Typography,
   useMediaQuery,
@@ -55,7 +56,7 @@ export const PrimarySearchBar = ({ isFeedAnuncioActive }) => {
     refetchOnReconnect: true,
   });
 
-  const { data: userData } = useQuery({
+  const { data: userData, isLoading } = useQuery({
     queryKey: ['usuarios', user?.id, 1],
     queryFn: () => getByUsuario(user?.id, 1),
     enabled: !!user?.id,
@@ -168,18 +169,31 @@ export const PrimarySearchBar = ({ isFeedAnuncioActive }) => {
                 {user ? (
                   <>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Avatar
-                        alt={userData?.user?.name || 'Avatar'}
-                        src={userData?.user?.avatar || '/placeholder.svg'}
-                        sx={{
-                          cursor: 'pointer',
-                          border: '2px solid rgba(204, 204, 204, 0.2)',
-                          boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
-                          width: 45,
-                          height: 45,
-                        }}
-                        onClick={handleMenuOpen}
-                      />
+                      {isLoading ? (
+                        <Skeleton
+                          variant="circular"
+                          width={45}
+                          height={45}
+                          sx={{
+                            cursor: 'pointer',
+                            border: '2px solid rgba(204, 204, 204, 0.2)',
+                            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
+                          }}
+                        />
+                      ) : (
+                        <Avatar
+                          alt={userData?.user?.name || 'Avatar'}
+                          src={userData?.user?.avatar || '/placeholder.svg'}
+                          sx={{
+                            cursor: 'pointer',
+                            border: '2px solid rgba(204, 204, 204, 0.2)',
+                            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
+                            width: 45,
+                            height: 45,
+                          }}
+                          onClick={handleMenuOpen}
+                        />
+                      )}
                       <Menu
                         anchorEl={anchorEl}
                         open={open}
