@@ -1,10 +1,9 @@
-import { Box, CircularProgress } from '@mui/material';
 import { jwtDecode } from 'jwt-decode';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { AlertNotification } from '../components/AlertNotification/index.jsx';
 
-import { axiosClient } from '../service/api.js';
 import { useAlert } from '../hooks/useShowAlert/index.js';
+import { axiosClient } from '../service/api.js';
 
 export const AuthContext = createContext();
 
@@ -103,21 +102,6 @@ export const AuthProvider = ({ children }) => {
     delete axiosClient.defaults.headers.common['Authorization'];
   };
 
-  if (!isInitialized) {
-    return (
-      <Box
-        sx={{
-          width: '100vw',
-          height: '100vh',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <CircularProgress />
-      </Box>
-    );
-  }
-
   return (
     <AuthContext.Provider
       value={{
@@ -126,13 +110,15 @@ export const AuthProvider = ({ children }) => {
         signIn,
         signOut,
         signed,
+        isInitialized,
       }}>
       <AlertNotification
         closeAlert={closeAlert}
         alert={alert}
       />
+      {!isInitialized ? null : children}
 
-      {children}
+      {/* {children} */}
     </AuthContext.Provider>
   );
 };

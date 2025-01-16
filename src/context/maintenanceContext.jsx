@@ -1,10 +1,9 @@
-import { Box, CircularProgress } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { createContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { AlertNotification } from '../components/AlertNotification';
-import { getAllSettings } from '../service/api';
 import { useAlert } from '../hooks/useShowAlert';
+import { getAllSettings } from '../service/api';
 
 export const MaintenanceContext = createContext();
 
@@ -67,19 +66,7 @@ export const MaintenanceProvider = ({ children }) => {
         alert={alert}
       />
 
-      {isLoading ? (
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100vh',
-          }}>
-          <CircularProgress />
-        </Box>
-      ) : (
-        children
-      )}
+      {children}
     </MaintenanceContext.Provider>
   );
 };
