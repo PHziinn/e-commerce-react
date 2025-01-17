@@ -5,7 +5,7 @@ import Carousel from 'react-material-ui-carousel';
 import { useQuery } from '@tanstack/react-query';
 import { getAllSettings } from '../../service/api';
 
-export const CarouselList = () => {
+export const CarouselTamplate = () => {
   const [activeStep, setActiveStep] = useState(0);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));

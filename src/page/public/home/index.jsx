@@ -2,10 +2,10 @@ import { Box, Container, useMediaQuery, useTheme } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { CardProducts } from '../../../components/cardProducts';
-import { CarouselList } from '../../../components/Carousel';
 import { Footer } from '../../../components/footer';
 import { PrimarySearchBar } from '../../../components/navBarHeader';
 import { getAllProdutos } from '../../../service/api';
+import { CarouselTamplate } from '../../../components/Carousel';
 
 export const Home = () => {
   const theme = useTheme();
@@ -36,7 +36,7 @@ export const Home = () => {
         <PrimarySearchBar />
 
         <Box sx={{ marginTop: isMobile ? 25 : '10rem' }}>
-          <CarouselList />
+          <CarouselTamplate />
 
           <CardProducts
             title="Mais Vendidos"
