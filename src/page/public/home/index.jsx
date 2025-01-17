@@ -1,17 +1,11 @@
 import { Box, Container, useMediaQuery, useTheme } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { CardProducts } from '../../../components/cardProducts';
-import { CarouselList } from '../../../components/carousel';
+import { CarouselList } from '../../../components/Carousel';
 import { Footer } from '../../../components/footer';
 import { PrimarySearchBar } from '../../../components/navBarHeader';
 import { getAllProdutos } from '../../../service/api';
-
-const StyledContainer = styled('div')({
-  marginTop: '6rem',
-  marginBottom: '1rem',
-});
 
 export const Home = () => {
   const theme = useTheme();
@@ -42,9 +36,7 @@ export const Home = () => {
         <PrimarySearchBar />
 
         <Box sx={{ marginTop: isMobile ? 25 : '10rem' }}>
-          <StyledContainer>
-            <CarouselList />
-          </StyledContainer>
+          <CarouselList />
 
           <CardProducts
             title="Mais Vendidos"

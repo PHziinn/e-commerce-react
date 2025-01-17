@@ -1,100 +1,112 @@
-import React, { useState } from 'react';
-import { Box, useTheme, useMediaQuery } from '@mui/material';
+import { Box, Skeleton, useMediaQuery, useTheme } from '@mui/material';
+import { useState } from 'react';
 import Carousel from 'react-material-ui-carousel';
 
-import ImageOne from '../../../public/imageCarousel/1.png';
-import ImageTwo from '../../../public/imageCarousel/2.png';
-import ImageThee from '../../../public/imageCarousel/3.png';
-import ImageFour from '../../../public/imageCarousel/4.png';
-import ImageFive from '../../../public/imageCarousel/5.png';
-import ImageSix from '../../../public/imageCarousel/6.png';
+import { useQuery } from '@tanstack/react-query';
+import { getAllSettings } from '../../service/api';
 
 export const CarouselList = () => {
   const [activeStep, setActiveStep] = useState(0);
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const items = [
-    {
-      img: ImageOne,
-      title: 'Título da Imagem 1',
-    },
-    {
-      img: ImageTwo,
-      title: 'Título da Imagem 2',
-    },
-    {
-      img: ImageThee,
-      title: 'Título da Imagem 3',
-    },
-    {
-      img: ImageFour,
-      title: 'Título da Imagem 4',
-    },
-    {
-      img: ImageFive,
-      title: 'Título da Imagem 5',
-    },
-    {
-      img: ImageSix,
-      title: 'Título da Imagem 6',
-    },
-  ];
+  const { data, isLoading } = useQuery({
+    queryKey: ['settings'],
+    queryFn: getAllSettings,
+    keepPreviousData: true,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+  });
 
   const handleStepChange = (step) => {
     setActiveStep(step);
   };
 
-  const theme = useTheme();
-
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const skeletonArray = Array.from({ length: 2 }, (_, index) => index);
 
   return (
     <Carousel
       index={activeStep}
       onChange={handleStepChange}
-      animation="slide"
       navButtonsAlwaysVisible={false}
       fullHeightHover={false}
+      indicators={true}
+      indicatorIconButtonProps={{
+        style: {
+          padding: isSmallScreen ? 6 : 10,
+          color: 'rgba(0, 0, 0, 0.5)',
+        },
+      }}
+      activeIndicatorIconButtonProps={{
+        style: {
+          color: '#000000',
+        },
+      }}
       sx={{
         maxWidth: '100%',
-        height: 500,
-        [theme.breakpoints.down('sm')]: {
-          height: 250,
-        },
-        [theme.breakpoints.down('md')]: {
-          height: 350,
-        },
-        [theme.breakpoints.up('xl')]: {
-          height: 600,
-          '.CarouselItem': {
-            width: '25%',
-          },
-        },
         '.CarouselItem': {
           width: '100%',
-          [theme.breakpoints.up('lg')]: {
-            width: '33.33%',
-          },
-          [theme.breakpoints.down('md')]: {
-            width: '50%',
-          },
+        },
+        '.MuiPaper-root': {
+          backgroundColor: 'transparent',
         },
       }}>
-      {items.map((item, i) => (
-        <Box
-          key={i}
-          sx={{ position: 'relative' }}>
-          <Box
-            component={'img'}
-            src={item.img}
-            alt={item.title}
-            style={{
-              width: '100%',
-              height: isSmallScreen ? 195 : 550,
-              objectFit: 'cover',
-            }}
-          />
-        </Box>
-      ))}
+      {isLoading
+        ? skeletonArray.map((_, index) => (
+            <Box
+              key={index}
+              sx={{
+                position: 'relative',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
+                height: isSmallScreen ? '200px' : '550px',
+              }}>
+              <Skeleton
+                animation="wave"
+                variant="rectangular"
+                width="100%"
+                height="100%"
+                sx={{
+                  borderRadius: 2,
+                  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                }}
+              />
+            </Box>
+          ))
+        : data?.[0]?.imagens?.map((item, index) => {
+            const imageUrl = isSmallScreen
+              ? item.url.replace('/upload/', '/upload/w_640,h_360/')
+              : item.url;
+
+            return (
+              <Box
+                key={index}
+                sx={{
+                  position: 'relative',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: '100%',
+                  height: '100%',
+                }}>
+                <Box
+                  component={'img'}
+                  src={imageUrl}
+                  alt={item.title}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    marginBottom: '10px',
+                    borderRadius: isSmallScreen ? 8 : 12,
+                    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                  }}
+                />
+              </Box>
+            );
+          })}
     </Carousel>
   );
 };
