@@ -5,7 +5,6 @@ import { CardProducts } from '../../../components/cardProducts';
 import { Footer } from '../../../components/footer';
 import { PrimarySearchBar } from '../../../components/navBarHeader';
 import { getAllProdutos } from '../../../service/api';
-import { CarouselTamplate } from '../../../components/CarouselTamplate';
 
 export const Home = () => {
   const theme = useTheme();
