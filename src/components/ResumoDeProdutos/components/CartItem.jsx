@@ -8,7 +8,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { AiOutlineDelete, AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 import { useDispatch } from 'react-redux';
 import {
@@ -17,13 +17,27 @@ import {
   removeProduct,
 } from '../../../redux-store/redux-actions/Cart/Slice';
 import { useConvertValues } from '../../../utils/ConvertValues';
+import { useQuery } from '@tanstack/react-query';
+import { getByProdutos } from '../../../service/api';
 
 export const CartItem = ({ item }) => {
   const { convertValues } = useConvertValues();
   const dispatch = useDispatch();
-
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const [isOutOfStock, setIsOutOfStock] = useState(false);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['produtos', item.id], // Use item.id in the queryKey
+    queryFn: () => getByProdutos(item.id),
+    keepPreviousData: true,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+    onSuccess: (data) => {
+      setIsOutOfStock(data?.statusEstoque === 'ESGOTADO');
+    },
+  });
 
   const handleIncreaseClick = (productId) => {
     dispatch(increaseProductQuantity(productId));
@@ -44,11 +58,22 @@ export const CartItem = ({ item }) => {
           component={'img'}
           src={item?.imagens[0].url}
           alt={item.name}
-          style={{ width: '100%', height: '100%', objectFit: 'scale-down' }}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'scale-down',
+            opacity: isOutOfStock ? 0.5 : 1,
+          }}
         />
       </Box>
       <CardContent
-        sx={{ flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        sx={{
+          flex: 1,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          opacity: isOutOfStock ? 0.5 : 1,
+        }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}>
           <Box
             sx={{
@@ -67,7 +92,32 @@ export const CartItem = ({ item }) => {
                 }}
               />
             </Box>
-            <Typography sx={{ fontSize: isMobile ? '0.885rem' : '1rem' }}>{item.name}</Typography>
+            <Box sx={{ flex: 1 }}>
+              {isOutOfStock && (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: '#FFEBEE',
+                    borderRadius: '20px',
+                    marginTop: 1,
+                    maxWidth: 'fit-content',
+                  }}>
+                  <Typography
+                    sx={{
+                      color: '#D32F2F',
+                      fontWeight: 'bold',
+                      fontSize: isMobile ? '0.85rem' : '1rem',
+                      textTransform: 'uppercase',
+                      letterSpacing: 1.2,
+                    }}>
+                    Esgotado
+                  </Typography>
+                </Box>
+              )}
+              <Typography sx={{ fontSize: isMobile ? '0.885rem' : '1rem' }}>{item.name}</Typography>
+            </Box>
           </Box>
 
           <Box
@@ -94,6 +144,7 @@ export const CartItem = ({ item }) => {
               }}>
               <IconButton
                 onClick={() => handleDecreaseClick(item.id)}
+                disabled={isOutOfStock}
                 sx={{
                   fontSize: '20px',
                   padding: 0,
@@ -106,6 +157,7 @@ export const CartItem = ({ item }) => {
               <TextField
                 type="number"
                 value={item.quantity}
+                disabled={isOutOfStock}
                 inputProps={{
                   min: 1,
                   step: 1,
@@ -130,10 +182,12 @@ export const CartItem = ({ item }) => {
 
               <IconButton
                 onClick={() => handleIncreaseClick(item.id)}
+                disabled={isOutOfStock}
                 sx={{
                   fontSize: '20px',
                   padding: 0,
                   color: '#757575',
+                  opacity: isOutOfStock ? 0.5 : 1,
                   '&:hover': { backgroundColor: '#f0f0f0' },
                 }}>
                 <AiOutlinePlus style={{ fontSize: '20px' }} />
