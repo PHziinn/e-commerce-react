@@ -133,7 +133,8 @@ export const ProductDetails = () => {
             </Grid2>
             <Grid2 size={{ xs: 12, md: 6 }}>
               <Box sx={{ mb: 3 }}>
-                {data?.product?.statusEstoque === 'ESGOTADO' && (
+                {(data?.product?.statusEstoque === 'ESGOTADO' ||
+                  data?.product?.isLocked === true) && (
                   <Box
                     sx={{
                       display: 'flex',
