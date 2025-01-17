@@ -1,11 +1,11 @@
 import { Box, Container, useMediaQuery, useTheme } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
+import { CarouselTamplate } from '../../../components/CarouselTamplate';
 import { CardProducts } from '../../../components/cardProducts';
 import { Footer } from '../../../components/footer';
 import { PrimarySearchBar } from '../../../components/navBarHeader';
 import { getAllProdutos } from '../../../service/api';
-import { CarouselTamplate } from '../../../components/CarouselTamplate';
 
 export const Home = () => {
   const theme = useTheme();
