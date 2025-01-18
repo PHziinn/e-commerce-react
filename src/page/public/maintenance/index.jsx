@@ -1,6 +1,6 @@
 import { Box, LinearProgress, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { FcServices } from 'react-icons/fc';
-import { FooterMaintenance } from './components/FooterMaintenance';
+import { Footer } from '../../../components/Footer';
 
 export const MaintenancePage = () => {
   const theme = useTheme();
@@ -55,7 +55,7 @@ export const MaintenancePage = () => {
           Agradecemos pela sua paciência.
         </Typography>
       </Box>
-      <FooterMaintenance />
+      <Footer />
     </Box>
   );
 };
