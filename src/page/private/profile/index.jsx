@@ -1,7 +1,7 @@
 import { Box, Container, useMediaQuery, useTheme } from '@mui/material';
 import { PrimarySearchBar } from '../../../components/navBarHeader';
 import { ProfileAccount } from '../../../components/profileAccount';
-import { Footer } from '../../../components/footer';
+import { Footer } from '../../../components/layout/Footer';
 
 export const Profile = () => {
   const theme = useTheme();

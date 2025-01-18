@@ -1,5 +1,6 @@
 import { ProductDetails } from '../../../components/DetailsProducts';
-import { Footer } from '../../../components/footer';
+import { Footer } from '../../../components/layout/Footer';
+
 import { PrimarySearchBar } from '../../../components/navBarHeader';
 
 import { Box, Container, useMediaQuery, useTheme } from '@mui/material';
@@ -22,9 +23,7 @@ export const DetailsProducts = () => {
         </Box>
       </Container>
 
-      <Box component={'div'}>
-        <Footer />
-      </Box>
+      <Footer />
     </>
   );
 };

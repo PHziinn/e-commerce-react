@@ -1,6 +1,7 @@
 import { Box, Button, Container, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { FcLock } from 'react-icons/fc';
 import { Navigate, useLocation } from 'react-router-dom';
+import { Footer } from '../../../components/layout/Footer';
 
 export const Unauthorized = () => {
   const theme = useTheme();
@@ -13,38 +14,42 @@ export const Unauthorized = () => {
   }
 
   return (
-    <Container maxWidth="sm">
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100dvh',
-          textAlign: 'center',
-        }}>
-        <FcLock size={150} />
-
-        <Typography sx={{ mt: 2, mb: 2, fontSize: isMobile ? '29px' : '42px', fontWeight: 'bold' }}>
-          Acesso Não Autorizado
-        </Typography>
-        <Typography
+    <>
+      <Container maxWidth="sm">
+        <Box
           sx={{
-            color: '#555555',
-            fontWeight: 400,
-            lineHeight: 1.6,
-            mb: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100dvh',
+            textAlign: 'center',
           }}>
-          Desculpe, você não tem permissão para acessar esta página. Por favor, verifique suas
-          credenciais ou entre em contato com o administrador.
-        </Typography>
-        <Button
-          variant="contained"
-          sx={{ backgroundColor: '#000000', mt: 5 }}
-          href="/">
-          Voltar para a Página Inicial
-        </Button>
-      </Box>
-    </Container>
+          <FcLock size={150} />
+
+          <Typography
+            sx={{ mt: 2, mb: 2, fontSize: isMobile ? '29px' : '42px', fontWeight: 'bold' }}>
+            Acesso Não Autorizado
+          </Typography>
+          <Typography
+            sx={{
+              color: '#555555',
+              fontWeight: 400,
+              lineHeight: 1.6,
+              mb: 1,
+            }}>
+            Desculpe, você não tem permissão para acessar esta página. Por favor, verifique suas
+            credenciais ou entre em contato com o administrador.
+          </Typography>
+          <Button
+            variant="contained"
+            sx={{ backgroundColor: '#000000', mt: 5 }}
+            href="/">
+            Voltar para a Página Inicial
+          </Button>
+        </Box>
+      </Container>
+      <Footer />
+    </>
   );
 };

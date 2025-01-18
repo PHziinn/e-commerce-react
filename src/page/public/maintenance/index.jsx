@@ -1,6 +1,6 @@
 import { Box, LinearProgress, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { FcServices } from 'react-icons/fc';
-import { Footer } from '../../../components/Footer';
+import { Footer } from '../../../components/layout/Footer';
 
 export const MaintenancePage = () => {
   const theme = useTheme();

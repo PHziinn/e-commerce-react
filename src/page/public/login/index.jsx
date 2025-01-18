@@ -23,6 +23,7 @@ import { AlertNotification } from '../../../components/AlertNotification';
 import { AuthContext } from '../../../context/authContext';
 import { useAlert } from '../../../hooks/useShowAlert';
 import { PrimarySearchBar } from '../../../components/navBarHeader';
+import { Footer } from '../../../components/layout/Footer';
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -66,170 +67,175 @@ export const Login = () => {
   const handleClickShowPassword = () => setShowPassword(!showPassword);
 
   return (
-    <ThemeProvider theme={createTheme()}>
-      <Container
-        component="main"
-        maxWidth="xs">
-        <PrimarySearchBar isFeedAnuncioActive />
-        <CssBaseline />
-        <AlertNotification
-          closeAlert={closeAlert}
-          alert={alert}
-        />
-        <Box
-          sx={{
-            minHeight: '100dvh',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'background.default',
-          }}>
+    <>
+      <ThemeProvider theme={createTheme()}>
+        <Container
+          component="main"
+          maxWidth="xs">
+          <PrimarySearchBar isFeedAnuncioActive />
+          <CssBaseline />
+          <AlertNotification
+            closeAlert={closeAlert}
+            alert={alert}
+          />
           <Box
             sx={{
+              mt: 5,
+              minHeight: '100dvh',
               display: 'flex',
-              flexDirection: 'column',
+              justifyContent: 'center',
               alignItems: 'center',
+              backgroundColor: 'background.default',
             }}>
             <Box
-              component="form"
-              onSubmit={handleSubmit}
-              noValidate
               sx={{
-                mt: 3,
-                p: 3,
-                borderRadius: 2,
-                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.3)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
               }}>
               <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  flexDirection: 'column',
-                  mb: 5,
-                }}>
-                <Avatar sx={{ m: 1, bgcolor: 'black', width: 60, height: 60, fontSize: 50 }}>
-                  <MdAccountCircle />
-                </Avatar>
-                <Typography
-                  sx={{ textTransform: 'uppercase', fontWeight: '600' }}
-                  component="h1"
-                  variant="h5">
-                  Login
-                </Typography>
-              </Box>
-
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email"
-                name="email"
-                autoComplete="email"
-                onChange={(e) => setEmail(e.target.value)}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: '8px',
-                    backgroundColor: 'white',
-                    boxShadow: '0 1px 6px rgba(0,0,0,0.1)',
-                  },
-                }}
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Senha"
-                type={showPassword ? 'text' : 'password'}
-                id="password"
-                autoComplete="current-password"
-                onChange={(e) => setPassword(e.target.value)}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: '8px',
-                    backgroundColor: 'white',
-                    boxShadow: '0 1px 6px rgba(0,0,0,0.1)',
-                  },
-                }}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        edge="end">
-                        {showPassword ? <MdOutlineVisibilityOff /> : <MdOutlineVisibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              <Grid sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      value="remember"
-                      color="primary"
-                    />
-                  }
-                  label="Lembre de mim"
-                />
-
-                <Link
-                  sx={{
-                    textAlign: 'center',
-                    textDecoration: 'none',
-                    fontWeight: 'bold',
-                  }}
-                  href="#"
-                  variant="body2">
-                  Esqueceu a senha?
-                </Link>
-              </Grid>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                disabled={loading}
+                component="form"
+                onSubmit={handleSubmit}
+                noValidate
                 sx={{
                   mt: 3,
-                  mb: 2,
-                  background: '#000000',
-                  transition: 'background-color 0.3s',
-                  ':hover': { backgroundColor: '#282828', color: '#fff', boxShadow: 'none' },
+                  p: 3,
+                  borderRadius: 2,
+                  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.3)',
                 }}>
-                {loading ? (
-                  <CircularProgress
-                    sx={{
-                      color: '#000000',
-                    }}
-                    size={24}
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                    mb: 5,
+                  }}>
+                  <Avatar sx={{ m: 1, bgcolor: 'black', width: 60, height: 60, fontSize: 50 }}>
+                    <MdAccountCircle />
+                  </Avatar>
+                  <Typography
+                    sx={{ textTransform: 'uppercase', fontWeight: '600' }}
+                    component="h1"
+                    variant="h5">
+                    Login
+                  </Typography>
+                </Box>
+
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email"
+                  name="email"
+                  autoComplete="email"
+                  onChange={(e) => setEmail(e.target.value)}
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: '8px',
+                      backgroundColor: 'white',
+                      boxShadow: '0 1px 6px rgba(0,0,0,0.1)',
+                    },
+                  }}
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Senha"
+                  type={showPassword ? 'text' : 'password'}
+                  id="password"
+                  autoComplete="current-password"
+                  onChange={(e) => setPassword(e.target.value)}
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: '8px',
+                      backgroundColor: 'white',
+                      boxShadow: '0 1px 6px rgba(0,0,0,0.1)',
+                    },
+                  }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          edge="end">
+                          {showPassword ? <MdOutlineVisibilityOff /> : <MdOutlineVisibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <Grid
+                  sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        value="remember"
+                        color="primary"
+                      />
+                    }
+                    label="Lembre de mim"
                   />
-                ) : (
-                  'Entrar'
-                )}
-              </Button>
-              <Divider />
-              <Box sx={{ display: 'flex', flexDirection: 'column', mt: 2 }}>
-                <Typography sx={{ textAlign: 'center' }}>
-                  Não tem uma conta?
+
                   <Link
-                    href="/cadastrar"
-                    variant="body2"
                     sx={{
-                      marginLeft: '7px',
+                      textAlign: 'center',
                       textDecoration: 'none',
                       fontWeight: 'bold',
-                    }}>
-                    Inscrever-se
+                    }}
+                    href="#"
+                    variant="body2">
+                    Esqueceu a senha?
                   </Link>
-                </Typography>
+                </Grid>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  disabled={loading}
+                  sx={{
+                    mt: 3,
+                    mb: 2,
+                    background: '#000000',
+                    transition: 'background-color 0.3s',
+                    ':hover': { backgroundColor: '#282828', color: '#fff', boxShadow: 'none' },
+                  }}>
+                  {loading ? (
+                    <CircularProgress
+                      sx={{
+                        color: '#000000',
+                      }}
+                      size={24}
+                    />
+                  ) : (
+                    'Entrar'
+                  )}
+                </Button>
+                <Divider />
+                <Box sx={{ display: 'flex', flexDirection: 'column', mt: 2 }}>
+                  <Typography sx={{ textAlign: 'center' }}>
+                    Não tem uma conta?
+                    <Link
+                      href="/cadastrar"
+                      variant="body2"
+                      sx={{
+                        marginLeft: '7px',
+                        textDecoration: 'none',
+                        fontWeight: 'bold',
+                      }}>
+                      Inscrever-se
+                    </Link>
+                  </Typography>
+                </Box>
               </Box>
             </Box>
           </Box>
-        </Box>
-      </Container>
-    </ThemeProvider>
+        </Container>
+      </ThemeProvider>
+      <Footer />
+    </>
   );
 };

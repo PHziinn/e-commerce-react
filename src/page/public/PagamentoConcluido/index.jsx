@@ -2,6 +2,7 @@ import { Box, Button, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { FcCheckmark } from 'react-icons/fc';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Footer } from '../../../components/layout/Footer';
 
 export const PagamentoConcluido = () => {
   const location = useLocation();
@@ -63,6 +64,7 @@ export const PagamentoConcluido = () => {
           </Button>
         </Box>
       </Box>
+      <Footer />
     </Box>
   );
 };

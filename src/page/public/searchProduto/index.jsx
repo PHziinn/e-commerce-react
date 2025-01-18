@@ -1,7 +1,7 @@
-import { Footer } from '../../../components/footer';
 import { PrimarySearchBar } from '../../../components/navBarHeader';
 import { Box, Container, useMediaQuery, useTheme } from '@mui/material';
 import { ProductsList } from '../../../components/ProductsList';
+import { Footer } from '../../../components/layout/Footer';
 
 export const SearchProducts = () => {
   const theme = useTheme();
@@ -18,9 +18,7 @@ export const SearchProducts = () => {
         <ProductsList />
       </Container>
 
-      <Box component={'div'}>
-        <Footer />
-      </Box>
+      <Footer />
     </>
   );
 };
