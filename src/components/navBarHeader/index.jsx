@@ -25,13 +25,13 @@ import {
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
-import TechDev from '../../../public/logoWhite.svg';
 import { useUser } from '../../context/authContext';
 import { selectProductsCount } from '../../redux-store/redux-actions/Cart/cart.Selectors';
 import { getAllSettings, getByUsuario } from '../../service/api';
 import { SearchResult } from '../Search';
 import { CarrinhoDeCompras } from './components/carrinhoDeCompras';
 import { FeedAnuncio } from './components/FeedAnuncio';
+import LogoTechPlay from '../../../public/logo-white.svg';
 
 export const PrimarySearchBar = ({ isFeedAnuncioActive }) => {
   const theme = useTheme();
@@ -139,12 +139,12 @@ export const PrimarySearchBar = ({ isFeedAnuncioActive }) => {
               }}>
               <Box
                 component={'img'}
-                src={TechDev}
-                alt={TechDev}
+                src={LogoTechPlay}
+                alt={LogoTechPlay}
                 onClick={() => navigate(`/`)}
                 sx={{
                   mb: isMobile ? 2 : null,
-                  width: isMobile ? '150px' : '200px',
+                  width: isMobile ? '135px' : '150px',
                 }}
               />
             </Typography>
