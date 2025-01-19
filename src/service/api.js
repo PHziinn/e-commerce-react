@@ -10,7 +10,7 @@ export async function postProdutos(dataProduto) {
 
   return response.data;
 }
-export async function getAllProdutos(name, page) {
+export async function getAllProdutos(page) {
   const response = await axiosClient.get(`/produtos?page=${page}`);
 
   return response.data;
@@ -35,13 +35,21 @@ export async function deleteProdutos(id) {
 
   return response.data;
 }
+
+// Pesquisa de Produtos
+export async function getSearchFilters(name, category, minPrice, maxPrice, page) {
+  const response = await axiosClient.get(
+    `/produtos/search/produto?name=${name}&category=${category}&minPrice=${minPrice}&maxPrice=${maxPrice}&page=${page}`
+  );
+  return response.data;
+}
 export async function getSearchProducts(name, page) {
   const response = await axiosClient.get(`/produtos/search/produto?name=${name}&page=${page}`);
   return response.data;
 }
-export async function getFiltersPrice(maxPrice, minPrice) {
+export async function getFiltersPrice(minPrice, maxPrice, page) {
   const response = await axiosClient.get(
-    `/produtos/filter/price?minPrice=${minPrice}&maxPrice=${maxPrice}`
+    `/produtos/filter/price?minPrice=${minPrice}&maxPrice=${maxPrice}&page=${page}`
   );
 
   return response.data;

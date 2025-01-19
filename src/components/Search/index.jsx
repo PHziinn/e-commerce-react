@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 import InputBase from '@mui/material/InputBase';
 import { styled } from '@mui/material/styles';
 import { debounce } from 'lodash';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { IoIosSearch } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 
@@ -56,9 +56,26 @@ export const SearchResult = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const nameParam = searchParams.get('name');
+    if (nameParam) {
+      setSearchTerm(nameParam);
+    }
+  }, [location.search]);
+
   const handleSearch = (event) => {
-    if (event.key === 'Enter' && searchTerm.trim() !== '') {
-      navigate(`/produtos/search/produto?name=${encodeURIComponent(searchTerm.trim())}`, {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      const queryParams = new URLSearchParams(location.search);
+
+      if (searchTerm.trim() !== '') {
+        queryParams.set('name', searchTerm.trim());
+      } else {
+        queryParams.delete('name');
+      }
+
+      navigate(`/produtos/search/produto?${queryParams.toString()}`, {
         replace: true,
       });
     }
@@ -67,7 +84,7 @@ export const SearchResult = () => {
   const debouncedSetSearchTerm = useCallback(
     debounce((value) => {
       setSearchTerm(value);
-    }, 10),
+    }, 20),
     []
   );
 

@@ -14,7 +14,7 @@ export const Home = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ['produtos', 1],
-    queryFn: () => getAllProdutos(null, 1),
+    queryFn: () => getAllProdutos(1),
     keepPreviousData: true,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
