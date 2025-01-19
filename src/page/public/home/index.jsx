@@ -27,12 +27,18 @@ export const Home = () => {
   }, []);
 
   return (
-    <>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+      }}>
       <Container
         maxWidth={false}
         sx={{
           maxWidth: isMobile ? '95vw' : '80vw',
           paddingX: isMobile ? 0 : null,
+          flex: 1,
         }}>
         <PrimarySearchBar />
 
@@ -61,6 +67,6 @@ export const Home = () => {
         </Box>
       </Container>
       <Footer />
-    </>
+    </Box>
   );
 };

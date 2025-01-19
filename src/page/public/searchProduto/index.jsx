@@ -7,18 +7,24 @@ export const SearchProducts = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   return (
-    <>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+      }}>
       <Container
         maxWidth={false}
         sx={{
           maxWidth: isMobile ? '95vw' : '80vw',
           paddingX: isMobile ? 0 : null,
+          flex: 1,
         }}>
         <PrimarySearchBar />
         <ProductsList />
       </Container>
 
       <Footer />
-    </>
+    </Box>
   );
 };
