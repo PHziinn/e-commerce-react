@@ -29,33 +29,39 @@ export const CardProdutoGrid = ({ isLoading, data, navigate, handleProductClick 
                   height: '440px',
                 }}>
                 <Skeleton
+                  animation="wave"
                   variant="rectangular"
                   width="100%"
                   height={220}
                   sx={{ marginBottom: 2 }}
                 />
                 <Skeleton
+                  animation="wave"
                   width="80%"
                   height={20}
                   sx={{ marginBottom: 2 }}
                 />
                 <Skeleton
+                  animation="wave"
                   width="60%"
                   height={20}
                   sx={{ marginBottom: 2 }}
                 />
                 <Skeleton
+                  animation="wave"
                   width="40%"
                   height={20}
                   sx={{ marginBottom: 2 }}
                 />
                 <Box sx={{ display: 'flex', gap: 1 }}>
                   <Skeleton
+                    animation="wave"
                     variant="rectangular"
                     width="80%"
                     height={36}
                   />
                   <Skeleton
+                    animation="wave"
                     variant="rectangular"
                     width="20%"
                     height={36}
@@ -104,7 +110,7 @@ export const CardProdutoGrid = ({ isLoading, data, navigate, handleProductClick 
                 <Typography
                   variant="body2"
                   sx={{
-                    mb: 2,
+                    mb: 3,
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     display: '-webkit-box',
@@ -112,8 +118,8 @@ export const CardProdutoGrid = ({ isLoading, data, navigate, handleProductClick 
                     WebkitBoxOrient: 'vertical',
                     marginBottom: 2,
                     flexGrow: 1,
-                    lineHeight: '1.4em',
-                    maxHeight: '3.4em',
+                    lineHeight: isMobile ? '1rem' : '1.4em',
+                    maxHeight: isMobile ? '2.1rem' : '3em',
                   }}>
                   {products.name}
                 </Typography>
@@ -159,7 +165,7 @@ export const CardProdutoGrid = ({ isLoading, data, navigate, handleProductClick 
                     }}>
                     <MdOutlineShoppingCart
                       style={{ fontSize: '1.4rem', display: isMobile ? 'none' : 'block' }}
-                    />{' '}
+                    />
                     Comprar
                   </Button>
                   <Button
