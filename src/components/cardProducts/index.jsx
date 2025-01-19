@@ -84,7 +84,7 @@ export const CardProducts = ({ title, hasBorder, products, isLoading }) => {
                     border: '1px solid #ccc',
                     borderRadius: '8px',
                     padding: '0.7rem',
-                    height: hasBorder ? '450px' : '400px',
+                    height: hasBorder ? '450px' : '425px',
                   }}>
                   {hasBorder && (
                     <Chip
