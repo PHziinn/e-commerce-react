@@ -65,7 +65,7 @@ export const GerenciadorDeProdutos = () => {
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['produtos', page],
-    queryFn: () => getAllProdutos(null, page),
+    queryFn: () => getAllProdutos(page),
     keepPreviousData: true,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
