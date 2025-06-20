@@ -1,12 +1,12 @@
 import { Box, Container, useMediaQuery, useTheme } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { CarouselTamplate } from '../../../components/CarouselTamplate';
 import { CardProducts } from '../../../components/cardProducts';
-
-import { PrimarySearchBar } from '../../../components/navBarHeader';
-import { getAllProdutos } from '../../../service/api';
+import { CarouselTamplate } from '../../../components/CarouselTamplate';
 import { Footer } from '../../../components/layout/Footer';
+import { PrimarySearchBar } from '../../../components/navBarHeader';
+import { Countdown } from '../../../components/Time';
+import { getAllProdutos } from '../../../service/api';
 
 export const Home = () => {
   const theme = useTheme();
@@ -26,6 +26,8 @@ export const Home = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  const offerEndDate = '2025-07-27T23:59:59';
+
   return (
     <Box
       sx={{
@@ -44,6 +46,15 @@ export const Home = () => {
 
         <Box sx={{ marginTop: isMobile ? 25 : '10rem' }}>
           <CarouselTamplate />
+
+          <Countdown targetDate={offerEndDate} />
+
+          <CardProducts
+            hasBorder={true}
+            isLoading={isLoading}
+            products={dataByCategory?.['MAIS_VENDIDOS']}
+            margin={20}
+          />
 
           <CardProducts
             title="Mais Vendidos"
