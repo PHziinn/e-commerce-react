@@ -1,11 +1,12 @@
 import { Box, Button, Chip, Grid2, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { MdOutlineAddShoppingCart, MdOutlineBolt, MdOutlineShoppingCart } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { SwiperSlide } from 'swiper/react';
 import { addProduct } from '../../redux-store/redux-actions/Cart/Slice';
+import { useConvertValues } from '../../utils/ConvertValues';
 import { SliderCard } from './../Slide/index';
-import { useEffect, useState } from 'react';
 import { SkeletonCard } from './SkeletonCard';
 
 const settings = {
@@ -31,9 +32,10 @@ const settings = {
   },
 };
 
-export const CardProducts = ({ title, hasBorder, products, isLoading }) => {
+export const CardProducts = ({ title, hasBorder, products, isLoading, margin }) => {
   const [showSkeleton, setShowSkeleton] = useState(isLoading);
   const navigate = useNavigate();
+  const { convertValues } = useConvertValues();
 
   const dispatch = useDispatch();
 
@@ -50,7 +52,7 @@ export const CardProducts = ({ title, hasBorder, products, isLoading }) => {
   const skeletonArray = Array.from({ length: 5 }, (_, index) => index);
 
   return (
-    <Box sx={{ padding: 0 }}>
+    <Box sx={{ padding: 0, marginBottom: margin || 0 }}>
       <Typography
         variant="h4"
         sx={{ fontWeight: 'bold', mb: 3, mt: 3 }}>
@@ -172,13 +174,13 @@ export const CardProducts = ({ title, hasBorder, products, isLoading }) => {
                     <Typography
                       variant="body2"
                       sx={{ textDecoration: 'line-through', color: 'gray' }}>
-                      R${product.oldPrice.toFixed(2)}
+                      {convertValues(product.oldPrice)}
                     </Typography>
                   )}
                   <Typography
                     variant="h6"
                     sx={{ fontWeight: 'bold', mb: 1 }}>
-                    R$ {product.price.toFixed(2)}
+                    {convertValues(product.price)}
                     <Typography
                       component={'p'}
                       sx={{ fontSize: 13, fontWeight: 'lighter', mb: 1 }}>
