@@ -36,7 +36,7 @@ export const Countdown = ({ targetDate }) => {
         spacing={isMobile ? 1 : 2}>
         <Grid
           item
-          xs={12}>
+          xs={isMobile ? 12 : 0}>
           <Typography
             sx={{
               fontWeight: 'bold',
