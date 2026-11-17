@@ -135,6 +135,7 @@ Este projeto está sob a licença MIT. Veja o arquivo [licença MIT](./LICENCE) 
 ## 👥 Autor
 
 **Wesley Santos** - [@PHziinn](https://github.com/PHziinn)
+**Paulo Santos**  - [@paulinsan](https://github.com/paulinsan)
 
 ---
 
